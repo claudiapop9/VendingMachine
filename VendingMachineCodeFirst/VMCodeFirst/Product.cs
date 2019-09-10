@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace VendingMachineCodeFirst
 {
-    class Product
+    public class Product
     {
         public int ProductId { get; set; }
         public string Name { get; set; }

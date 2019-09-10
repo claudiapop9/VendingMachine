@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,6 +61,7 @@
     <Compile Include="CardPayment.cs" />
     <Compile Include="CashMoney.cs" />
     <Compile Include="CashPayment.cs" />
+    <Compile Include="IProductCollection.cs" />
     <Compile Include="SocketCommunication.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="IPayment.cs" />

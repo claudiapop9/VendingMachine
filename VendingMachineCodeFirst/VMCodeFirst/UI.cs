@@ -13,7 +13,10 @@ namespace VendingMachineCodeFirst
 
         public void Run()
         {
-            MainMenu();
+            while (true)
+            {
+                MainMenu();
+            }
         }
 
         public void MainMenu()
@@ -42,7 +45,7 @@ namespace VendingMachineCodeFirst
 
         public void ShowProductList()
         {
-            List<Product> products = ctrl.GetProductsList();
+            IList<Product> products = ctrl.GetProductsList();
 
             for (int i = 0; i < products.Count; i++)
             {

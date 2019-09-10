@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace VendingMachineCodeFirst
 {
-    class Controller
+    public class Controller
     {
         private const string filePath = @".\currentDb.txt";
         private const string filePathAllStates = @".\all.txt";
@@ -14,8 +14,8 @@ namespace VendingMachineCodeFirst
 
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private ProductCollection productCollection = new ProductCollection();
+    
+        private readonly ProductCollection productCollection = new ProductCollection(new VendMachineDbContext());
         private Data dataStorage = new Data(filePath, filePathAllStates);
         private TransactionManager transactionManager = new TransactionManager();
         private Report report = new Report();
@@ -59,7 +59,7 @@ namespace VendingMachineCodeFirst
                     switch (option)
                     {
                         case "GET":
-                            List<Product> list = GetProductsList();
+                            IList<Product> list = GetProductsList();
                             socketCommunication.SendData(JsonConvert.SerializeObject(list));
                             break;
                         case "ADD":
@@ -128,7 +128,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        public List<Product> GetProductsList()
+        public IList<Product> GetProductsList()
         {
             return productCollection.GetProducts();
         }
@@ -152,7 +152,7 @@ namespace VendingMachineCodeFirst
 
         public bool Refill()
         {
-            List<Product> productsToRefList = productCollection.GetProductsToRefill();
+            IList<Product> productsToRefList = productCollection.GetProductsToRefill();
             if (productCollection.Refill())
             {
                 dataStorage.PersistData(this.productCollection.GetProducts());
@@ -165,7 +165,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        public void AddTransactionRefill(List<Product> products)
+        public void AddTransactionRefill(IList<Product> products)
         {
             foreach (var prod in products)
             {

@@ -16,15 +16,15 @@ namespace VendingMachineCodeFirst
         {
             this.filePath = filePath;
             this.filePathAll = filePathAll;
-
         }
-        public void PersistData(List<Product> products)
+
+        public void PersistData(IList<Product> products)
         {
             WriteCurrentState(products);
             AppendCurrentState(products);
         }
 
-        private void WriteCurrentState(List<Product> products)
+        private void WriteCurrentState(IList<Product> products)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        private void AppendCurrentState(List<Product> products)
+        private void AppendCurrentState(IList<Product> products)
         {
             try
             {

@@ -3,7 +3,7 @@
 
 namespace VendingMachineCodeFirst
 {
-    class Transaction
+    public class Transaction
     {
         public int TransactionId { get; set; }
         public string Type{ get; set; }

@@ -7,22 +7,25 @@ using System.Data.Entity;
 
 namespace VendingMachineCodeFirst
 {
-    class ProductCollection
+    public class ProductCollection : IProductCollection
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-       
+        private VendMachineDbContext context;
+
+        public ProductCollection(VendMachineDbContext context)
+        {
+            this.context = context;
+        }
 
         public void AddProduct(Product p)
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    db.Products.Add(p);
-                    db.SaveChanges();
-                }
+                context.Products.Add(p);
+                context.SaveChanges();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 log.Error("Db connection failed-ADD");
             }
         }
@@ -31,12 +34,8 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    db.Entry(p).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-                
+                context.Entry(p).State = EntityState.Modified;
+                context.SaveChanges();
             }
             catch (Exception)
             {
@@ -48,12 +47,11 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    Product p = db.Products.Where(x => x.ProductId == productId).FirstOrDefault();
-                    p.Quantity -= 1;
-                    UpdateProduct(p);
-                }
+
+                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
+                p.Quantity -= 1;
+                UpdateProduct(p);
+
             }
             catch (Exception)
             {
@@ -64,14 +62,12 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    Product p = db.Products.Where(x => x.ProductId == productId).FirstOrDefault();
-                    db.Products.Remove(p);
-                    db.SaveChanges();
-                }
-                
-            }catch (Exception)
+                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
+                context.Products.Remove(p);
+                context.SaveChanges();
+
+            }
+            catch (Exception)
             {
                 log.Error("Db connection failed-remove prod");
             }
@@ -81,12 +77,9 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    Product p = db.Products.Where(x => x.ProductId == id).FirstOrDefault();
-                    double price = (Double)p.Price;
-                    return price;
-                }
+                Product p = context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+                double price = (Double)p.Price;
+                return price;
             }
             catch (Exception)
             {
@@ -94,23 +87,23 @@ namespace VendingMachineCodeFirst
             }
             return -1;
         }
-       
-        public bool Refill() {
+
+        public bool Refill()
+        {
 
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    List<Product> productQuantity = GetProductsToRefill();
+                IList<Product> productQuantity = GetProductsToRefill();
 
-                    foreach (Product prod in productQuantity) {
-                        prod.Quantity = 10;
-                        db.Entry(prod).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
+                foreach (Product prod in productQuantity)
+                {
+                    prod.Quantity = 10;
+                    context.Entry(prod).State = EntityState.Modified;
+                    context.SaveChanges();
                 }
+
                 log.Info("REFILL successful");
-                
+
                 return true;
             }
             catch (Exception)
@@ -121,18 +114,14 @@ namespace VendingMachineCodeFirst
 
         }
 
-        public List<Product> GetProductsToRefill()
+        public IList<Product> GetProductsToRefill()
         {
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    List<Product> productQuantity = (from product in db.Products
-                        where (product.Quantity != 10)
-                        select product).ToList();
-                    return productQuantity;
-                }
-
+                IList<Product> productQuantity = (from product in context.Products
+                                                  where (product.Quantity != 10)
+                                                  select product).ToList();
+                return productQuantity;
             }
             catch (Exception)
             {
@@ -143,16 +132,12 @@ namespace VendingMachineCodeFirst
         }
 
 
-        public List<Product> GetProducts()
+        public IList<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
             try
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    products = db.Products.ToList<Product>();
-                }
-                
+                products = context.Products.ToList<Product>();
             }
             catch (Exception)
             {
@@ -160,8 +145,5 @@ namespace VendingMachineCodeFirst
             }
             return products;
         }
-
-       
-
     }
 }
