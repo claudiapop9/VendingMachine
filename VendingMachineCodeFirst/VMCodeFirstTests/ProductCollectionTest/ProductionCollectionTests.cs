@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using VendingMachineCodeFirst;
-using VMCodeFirstTests.ProductCollectionTest;
 
 namespace VMCodeFirstTests
 {
@@ -17,15 +16,31 @@ namespace VMCodeFirstTests
         [TestInitialize]
         public void TestInit()
         {
+            //IList<Product> data = new List<Product> {
+            //    new Product { Name = "ProdTest1", Quantity=3, Price=10},
+            //    new Product { Name = "ProdTest2", Quantity=10, Price=8 },
+            //    new Product { Name = "ProdTest3", Quantity=3, Price=5 },
+            //};
 
-            IList<Product> data = new List<Product> {
-                new Product { Name = "ProdTest1", Quantity=3, Price=10},
-                new Product { Name = "ProdTest2", Quantity=10, Price=8 },
-                new Product { Name = "ProdTest3", Quantity=3, Price=5 },
-            };
+            //Mock<IProductCollection> MockProductionCollection = new Mock<IProductCollection>();
+            //this.service = MockProductionCollection.Object;
 
-            Mock<IProductCollection> MockProductionCollection = new Mock<IProductCollection>();
-            this.service = MockProductionCollection.Object;
+            IQueryable<Product> data = new List<Product>
+            {
+                new Product { Name = "ProdTest1", Quantity=6, Price=10},
+                new Product { Name = "ProdTest2", Quantity=10, Price=10 },
+                new Product { Name = "ProdTest3", Quantity=7, Price=10 },
+            }.AsQueryable();
+
+            Mock<DbSet<Product>> mockSet = new Mock<DbSet<Product>>();
+            mockSet.As<IQueryable<Product>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<Product>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+            Mock<VendMachineDbContext> mockContext = new Mock<VendMachineDbContext>();
+            mockContext.Setup(c => c.Products).Returns(mockSet.Object);
+            service = new ProductCollection(mockContext.Object);
         }
 
         [TestMethod]
@@ -72,7 +87,6 @@ namespace VMCodeFirstTests
         public void GetProductPriceByKeyWhenNoProduct()
         {
             double price = service.GetProductPriceByKey(5);
-
             Assert.AreEqual(-1, price);
         }
 
