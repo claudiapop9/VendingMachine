@@ -50,81 +50,84 @@ namespace VendingMachineCodeFirst
         {
             SocketCommunication socketCommunication = new SocketCommunication();
             if (socketCommunication.IsConnected())
+                HandleCommands(socketCommunication);
+        }
+
+        private void HandleCommands(SocketCommunication socketCommunication)
+        {
+            try
             {
-                try
+                string message = socketCommunication.ReceiveMessage();
+                string option = message.Split(' ')[0];
+                string data = message.Split(' ')[1];
+                switch (option)
                 {
-                    string message = socketCommunication.ReceiveMessage();
-                    string option = message.Split(' ')[0];
-                    string data = message.Split(' ')[1];
-                    switch (option)
-                    {
-                        case "GET":
-                            IList<Product> list = GetProductsList();
-                            socketCommunication.SendData(JsonConvert.SerializeObject(list));
-                            break;
-                        case "ADD":
-                            Product product = JsonConvert.DeserializeObject<Product>(data);
-                            AddProductToList(product);
-                            log.Info(product);
-                            socketCommunication.SendData("Success ADD");
-                            break;
-                        case "UPDATE":
+                    case "GET":
+                        IList<Product> list = GetProductsList();
+                        socketCommunication.SendData(JsonConvert.SerializeObject(list));
+                        break;
+                    case "ADD":
+                        Product product = JsonConvert.DeserializeObject<Product>(data);
+                        AddProductToList(product);
+                        log.Info(product);
+                        socketCommunication.SendData("Success ADD");
+                        break;
+                    case "UPDATE":
 
-                            Product productToUpdate = JsonConvert.DeserializeObject<Product>(data);
-                            UpdateProductInList(productToUpdate);
-                            log.Info(productToUpdate);
-                            socketCommunication.SendData("Success UPDATE");
+                        Product productToUpdate = JsonConvert.DeserializeObject<Product>(data);
+                        UpdateProductInList(productToUpdate);
+                        log.Info(productToUpdate);
+                        socketCommunication.SendData("Success UPDATE");
 
-                            break;
-                        case "DELETE":
+                        break;
+                    case "DELETE":
 
-                            int id = JsonConvert.DeserializeObject<int>(data);
-                            DeleteProductFromList(id);
-                            socketCommunication.SendData("Success DELETE");
-                            break;
-                        case "REFILL":
-                            if (Refill())
-                            {
-                                socketCommunication.SendData("Success REFILL");
-                            }
-                            else
-                            {
-                                socketCommunication.SendData("Fail REFILL");
-                            }
+                        int id = JsonConvert.DeserializeObject<int>(data);
+                        DeleteProductFromList(id);
+                        socketCommunication.SendData("Success DELETE");
+                        break;
+                    case "REFILL":
+                        if (Refill())
+                        {
+                            socketCommunication.SendData("Success REFILL");
+                        }
+                        else
+                        {
+                            socketCommunication.SendData("Fail REFILL");
+                        }
 
-                            break;
-                        case "REPORT":
-                            string dataReport = GenerateReport();
-                            if (dataReport != null)
-                            {
-                                socketCommunication.SendData(dataReport);
-                                log.Info("REPORT sent");
-                            }
-                            else
-                            {
-                                socketCommunication.SendData("Generate Report fail");
-                                log.Info("REPORT fail");
-                            }
+                        break;
+                    case "REPORT":
+                        string dataReport = GenerateReport();
+                        if (dataReport != null)
+                        {
+                            socketCommunication.SendData(dataReport);
+                            log.Info("REPORT sent");
+                        }
+                        else
+                        {
+                            socketCommunication.SendData("Generate Report fail");
+                            log.Info("REPORT fail");
+                        }
 
-                            break;
-                    }
+                        break;
                 }
-                catch (ArgumentNullException ane)
-                {
-                    log.Error("ArgumentNullException : {0}", ane);
-                }
-                catch (SocketException se)
-                {
-                    log.Error("SocketException : {0}", se);
-                }
-                catch (JsonException ex)
-                {
-                    log.Error("Json convert" + ex);
-                }
-                catch (Exception ex)
-                {
-                    log.Info(ex);
-                }
+            }
+            catch (ArgumentNullException ane)
+            {
+                log.Error("ArgumentNullException : {0}", ane);
+            }
+            catch (SocketException se)
+            {
+                log.Error("SocketException : {0}", se);
+            }
+            catch (JsonException ex)
+            {
+                log.Error("Json convert" + ex);
+            }
+            catch (Exception ex)
+            {
+                log.Info(ex);
             }
         }
 

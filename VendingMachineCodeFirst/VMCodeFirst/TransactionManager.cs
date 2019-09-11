@@ -28,20 +28,21 @@ namespace VendingMachineCodeFirst
 
         public List<Transaction> GetTransactions()
         {
-            List<Transaction> transactions = new List<Transaction>();
             try
             {
+                List<Transaction> transactions = new List<Transaction>();
                 using (var db = new VendMachineDbContext())
                 {
                     transactions = db.Transactions.ToList<Transaction>();
                 }
+                return transactions;
 
             }
             catch (Exception)
             {
                 log.Error("Db connection");
+                return new List<Transaction>();
             }
-            return transactions;
         }
     }
 }

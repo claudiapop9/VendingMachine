@@ -47,17 +47,16 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-
                 Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
                 p.Quantity -= 1;
                 UpdateProduct(p);
-
             }
             catch (Exception)
             {
                 log.Error("Db connection failed-DecreaseProd");
             }
         }
+
         public void RemoveProduct(int productId)
         {
             try
@@ -65,7 +64,6 @@ namespace VendingMachineCodeFirst
                 Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
                 context.Products.Remove(p);
                 context.SaveChanges();
-
             }
             catch (Exception)
             {
@@ -84,13 +82,12 @@ namespace VendingMachineCodeFirst
             catch (Exception)
             {
                 log.Error("Db connection failed-GET product by KEY");
-            }
-            return -1;
+                return -1;
+            }            
         }
 
         public bool Refill()
         {
-
             try
             {
                 IList<Product> productQuantity = GetProductsToRefill();
@@ -111,7 +108,6 @@ namespace VendingMachineCodeFirst
                 log.Error("REFILL failed");
                 return false;
             }
-
         }
 
         public IList<Product> GetProductsToRefill()
@@ -124,26 +120,27 @@ namespace VendingMachineCodeFirst
                 return productQuantity;
             }
             catch (Exception)
-            {
+            { 
                 log.Error("FIND refill products failed");
+                return new List<Product>();
             }
-
-            return new List<Product>();
         }
 
 
         public IList<Product> GetProducts()
         {
-            List<Product> products = new List<Product>();
             try
             {
+                List<Product> products = new List<Product>();
                 products = context.Products.ToList<Product>();
+                return products;
             }
             catch (Exception)
             {
                 log.Error("Db connection-GET Prod");
+                return new List<Product>();
             }
-            return products;
+            
         }
     }
 }

@@ -29,14 +29,12 @@ namespace VendingMachineCodeFirst
             try
             {
                 using (StreamWriter myFile = new StreamWriter(filePath))
-          
+
                     foreach (Product p in products)
                     {
                         myFile.WriteLine(JsonConvert.SerializeObject(p));
                     }
-                    log.Info("Current state written in file");
-
-                
+                log.Info("Current state written in file");
             }
             catch (Exception)
             {
@@ -66,8 +64,7 @@ namespace VendingMachineCodeFirst
             {
                 log.Error("File Error when appending");
             }
-
         }
 
-        }
+    }
 }
