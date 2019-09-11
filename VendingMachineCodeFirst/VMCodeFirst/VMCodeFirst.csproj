@@ -62,6 +62,7 @@
     <Compile Include="CashMoney.cs" />
     <Compile Include="CashPayment.cs" />
     <Compile Include="IProductCollection.cs" />
+    <Compile Include="ProxyServer.cs" />
     <Compile Include="SocketCommunication.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="IPayment.cs" />

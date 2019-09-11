@@ -37,7 +37,7 @@ namespace VendingMachineCodeFirst
                     WayOfPayment();
                     break;
                 case "3":
-                    ctrl.Communicate();
+                    Communicate();
                     break;
             }
         }
@@ -74,6 +74,16 @@ namespace VendingMachineCodeFirst
                     payment = new CardPayment();
                     ShopMenu();
                     break;
+            }
+        }
+
+        public void Communicate()
+        {
+            SocketCommunication socketCommunication = new SocketCommunication();
+            if (socketCommunication.IsConnected())
+            {
+                ProxyServer proxy = new ProxyServer(socketCommunication);
+                proxy.HandleCommands();
             }
         }
 
