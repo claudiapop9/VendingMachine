@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
 
 namespace VendingMachineCodeFirst
@@ -21,10 +18,7 @@ namespace VendingMachineCodeFirst
         private Report report = new Report();
         private IPayment payment;
 
-
-        public Controller()
-        {
-        }
+        public Controller(){}
 
         public Controller(IPayment paymentMethod)
         {
@@ -46,25 +40,23 @@ namespace VendingMachineCodeFirst
             return false;
         }
 
-
-
-        public IList<Product> GetProductsList()
+        public IList<Product> GetProducts()
         {
             return productCollection.GetProducts();
         }
 
-        public void AddProductToList(Product p)
+        public void AddProduct(Product p)
         {
             this.productCollection.AddProduct(p);
             dataStorage.PersistData(this.productCollection.GetProducts());
         }
 
-        public void UpdateProductInList(Product p)
+        public void UpdateProduct(Product p)
         {
             this.productCollection.UpdateProduct(p);
         }
 
-        public void DeleteProductFromList(int productId)
+        public void DeleteProduct(int productId)
         {
             this.productCollection.RemoveProduct(productId);
             dataStorage.PersistData(this.productCollection.GetProducts());
@@ -79,10 +71,8 @@ namespace VendingMachineCodeFirst
                 AddTransactionRefill(productsToRefList);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public void AddTransactionRefill(IList<Product> products)

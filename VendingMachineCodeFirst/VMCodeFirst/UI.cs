@@ -45,7 +45,7 @@ namespace VendingMachineCodeFirst
 
         public void ShowProductList()
         {
-            IList<Product> products = ctrl.GetProductsList();
+            IList<Product> products = ctrl.GetProducts();
 
             for (int i = 0; i < products.Count; i++)
             {
