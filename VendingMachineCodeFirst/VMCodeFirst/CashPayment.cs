@@ -11,18 +11,17 @@ namespace VendingMachineCodeFirst
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         List<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
         private List<CashMoney> introducedMoney = new List<CashMoney>();
-        double totalMoney=0;
-        
+        double totalMoney = 0;
+
         public void Pay(double cost)
         {
-
             if (cost.Equals(totalMoney))
             {
                 foreach (CashMoney entry in introducedMoney)
                 {
                     double value = (double)entry.MoneyValue;
                     int quantity = (Int32)entry.Quantity;
-                    UpdateMoney(value,quantity);
+                    UpdateMoney(value, quantity);
                 }
             }
             else if (cost < totalMoney)
@@ -43,7 +42,8 @@ namespace VendingMachineCodeFirst
             return cost <= totalMoney;
         }
 
-        public void AskForMoney(double cost) {
+        public void AskForMoney(double cost)
+        {
             try
             {
                 Console.WriteLine("Introduce money:");
@@ -56,7 +56,8 @@ namespace VendingMachineCodeFirst
                     AddMoney(money);
                 };
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 log.Error("Wrong introduced money.");
                 Console.WriteLine(e);
             }
@@ -88,10 +89,12 @@ namespace VendingMachineCodeFirst
                     db.SaveChanges();
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 log.Error("Fail database connection\n");
             }
         }
+
         public void GiveChange(double change)
         {
             List<CashMoney> money = new List<CashMoney>();
@@ -115,7 +118,8 @@ namespace VendingMachineCodeFirst
                     log.Info("GIVE Change success");
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 log.Error("Fail database connection-GIVE Change");
             }
         }
@@ -132,7 +136,7 @@ namespace VendingMachineCodeFirst
                 List<CashMoney> matches = Calculate(subset, change);
                 if (matches != null)
                 {
-                    int matchCount = matches.Sum(c =>(Int32)c.Quantity);
+                    int matchCount = matches.Sum(c => (Int32)c.Quantity);
                     if (minimalMatch == null || matchCount < minimalCount)
                     {
                         minimalMatch = matches;
@@ -145,6 +149,7 @@ namespace VendingMachineCodeFirst
 
             return minimalMatch;
         }
+
         private static List<CashMoney> Calculate(List<CashMoney> coins, double change, int start = 0)
         {
             for (int i = start; i < coins.Count; i++)
@@ -180,7 +185,9 @@ namespace VendingMachineCodeFirst
                     }
                 }
             }
+
             return null;
-        }        
+        }
+
     }
 }

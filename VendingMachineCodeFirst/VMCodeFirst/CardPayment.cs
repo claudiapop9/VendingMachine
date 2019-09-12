@@ -9,30 +9,28 @@ namespace VendingMachineCodeFirst
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string cardNo;
         private string pin;
-        private bool enough = false;
-                
+
         public void Pay(double cost)
         {
-           
-                try
+            try
+            {
+                using (var db = new VendMachineDbContext())
                 {
-                    using (var db = new VendMachineDbContext())
-                    {
-                        Account Account = db.Accounts.Where(x => x.CardNO == cardNo).FirstOrDefault();
-                        Account.Amount -= cost;
-                        db.Entry(Account).State = EntityState.Modified;
-                        db.SaveChanges();
-                        log.Info("Payment success");
-                    }
+                    Account Account = db.Accounts.Where(x => x.CardNO == cardNo).FirstOrDefault();
+                    Account.Amount -= cost;
+                    db.Entry(Account).State = EntityState.Modified;
+                    db.SaveChanges();
+                    log.Info("Payment success");
                 }
-                catch(Exception) {
-                    log.Error("Db connection failed");
-                }
-           
+            }
+            catch (Exception)
+            {
+                log.Error("Db connection failed");
+            }
         }
+
         public bool IsEnough(double cost)
         {
-            AskDetails();
             try
             {
                 using (var db = new VendMachineDbContext())
@@ -40,22 +38,22 @@ namespace VendingMachineCodeFirst
                     Account Account = db.Accounts.Where(x => x.CardNO == cardNo).FirstOrDefault();
                     if (Account.Amount >= cost)
                     {
-                        
+
                         return true;
                     }
-                   
+
                 }
             }
             catch (Exception)
             {
                 log.Error("Db connection failed");
-
             }
             return false;
         }
+
         private void AskDetails()
         {
-            
+
             Console.WriteLine("CardNo:");
             string cardNo = Console.ReadLine();
             Console.WriteLine("PIN:");
@@ -85,7 +83,8 @@ namespace VendingMachineCodeFirst
                     return false;
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 log.Error("Db connection failed");
             }
             return false;

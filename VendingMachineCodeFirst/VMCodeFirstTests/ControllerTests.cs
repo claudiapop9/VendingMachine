@@ -13,9 +13,9 @@ namespace VMCodeFirstTests
             Product productTest = new Product("ProductTest", 2, 8);
             Controller ctrl = new Controller();
 
-            int initialNo = ctrl.GetProductsList().Count;
-            ctrl.AddProductToList(productTest);
-            int updatedNo = ctrl.GetProductsList().Count;
+            int initialNo = ctrl.GetProducts().Count;
+            ctrl.AddProduct(productTest);
+            int updatedNo = ctrl.GetProducts().Count;
 
             Assert.AreEqual(initialNo + 1, updatedNo);
         }
