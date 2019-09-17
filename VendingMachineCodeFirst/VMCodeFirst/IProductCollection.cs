@@ -8,9 +8,9 @@ namespace VendingMachineCodeFirst
 
         void UpdateProduct(Product p);
 
-        void DecreaseProductQuantity(int productId);
-
         void RemoveProduct(int productId);
+
+        void DecreaseProductQuantity(int productId);
 
         double GetProductPriceByKey(int id);
 

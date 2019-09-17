@@ -1,84 +1,93 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using VendingMachineCodeFirst;
+using VMCodeFirstTests.ProductCollectionTest;
 
 namespace VMCodeFirstTests
 {
     [TestClass]
     public class ProductionCollectionTests
     {
-        IProductCollection service;
-        IList<Product> data;
+        IList<Product> products;
+        Mock<IProductCollection> MockProductRepository;
 
         [TestInitialize]
         public void TestInit()
         {
-            //IList<Product> data = new List<Product> {
-            //    new Product { Name = "ProdTest1", Quantity=3, Price=10},
-            //    new Product { Name = "ProdTest2", Quantity=10, Price=8 },
-            //    new Product { Name = "ProdTest3", Quantity=3, Price=5 },
-            //};
-
-            //Mock<IProductCollection> MockProductionCollection = new Mock<IProductCollection>();
-            //this.service = MockProductionCollection.Object;
-
-            IQueryable<Product> data = new List<Product>
+            products = new List<Product>()
             {
-                new Product { Name = "ProdTest1", Quantity=6, Price=10},
-                new Product { Name = "ProdTest2", Quantity=10, Price=10 },
-                new Product { Name = "ProdTest3", Quantity=7, Price=10 },
-            }.AsQueryable();
+                new Product {ProductId=0, Name = "ProdTest1", Quantity=6, Price=10},
+                new Product {ProductId=1, Name = "ProdTest2", Quantity=8, Price=5 },
+                new Product {ProductId=2, Name = "ProdTest3", Quantity=10, Price=15 },
+            };
 
-            Mock<DbSet<Product>> mockSet = new Mock<DbSet<Product>>();
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            MockProductRepository = new Mock<IProductCollection>();
+        }
 
-            Mock<VendMachineDbContext> mockContext = new Mock<VendMachineDbContext>();
-            mockContext.Setup(c => c.Products).Returns(mockSet.Object);
-            service = new ProductCollection(mockContext.Object);
+        [TestMethod]
+        public void AddProduct()
+        {
+            ProductCollectionMoq.AddProduct(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+
+            Product p = new Product { ProductId = 0, Name = "ProdTest1a", Quantity = 4, Price = 10 };
+            MockProductRepository.Object.AddProduct(p);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+
+            Assert.AreEqual(findedProducts.Count, products.Count);
         }
 
         [TestMethod]
         public void UpdateProduct()
         {
+            ProductCollectionMoq.UpdateProduct(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+
             Product p = new Product { ProductId = 0, Name = "ProdTest1a", Quantity = 4, Price = 10 };
-            service.UpdateProduct(p);
-            IList<Product> products = service.GetProducts();
-            Assert.AreEqual("ProdTest1a", products[0].Name);
+            MockProductRepository.Object.UpdateProduct(p);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+
+            string updatedName = findedProducts.FirstOrDefault(product => product.ProductId == p.ProductId).Name;
+
+            Assert.AreEqual("ProdTest1a", updatedName);
+        }
+
+        [TestMethod]
+        public void RemoveProductWhenIdExists()
+        {
+            ProductCollectionMoq.RemoveProduct(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+
+            MockProductRepository.Object.RemoveProduct(0);
+
+            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+
+            Assert.AreEqual(2, findedProducts.Count);
         }
 
         [TestMethod]
         public void DecreaseProductQuantityWhenIdExists()
         {
+            ProductCollectionMoq.DecreaseProductQuantity(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
 
-            service.DecreaseProductQuantity(0);
-            IList<Product> products = service.GetProducts();
-            Assert.AreEqual(2, products[0].Quantity);
-        }
+            MockProductRepository.Object.DecreaseProductQuantity(0);
 
+            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+            int updatedQuantity = findedProducts.FirstOrDefault(product => product.ProductId == 0).Quantity;
 
-        [TestMethod]
-        public void RemoveProductWhenIdExists()
-        {
-
-            service.RemoveProduct(0);
-            IList<Product> products = service.GetProducts();
-
-            Assert.AreEqual(2, products.Count);
-            //Assert.AreEqual("ProdTest1", products[0].Name);
-            Assert.AreEqual("ProdTest2", products[0].Name);
-            Assert.AreEqual("ProdTest3", products[1].Name);
+            Assert.AreEqual(5, updatedQuantity);
         }
 
         [TestMethod]
         public void GetProductPriceByKeyWhenProductExists()
         {
-            double price = service.GetProductPriceByKey(0);
+            ProductCollectionMoq.GetProductPriceByKey(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+
+            double price = MockProductRepository.Object.GetProductPriceByKey(0);
 
             Assert.AreEqual(10, price);
         }
@@ -86,66 +95,64 @@ namespace VMCodeFirstTests
         [TestMethod]
         public void GetProductPriceByKeyWhenNoProduct()
         {
-            double price = service.GetProductPriceByKey(5);
+            products = new List<Product>();
+
+            ProductCollectionMoq.GetProductPriceByKey(MockProductRepository, products);
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+
+            double price = MockProductRepository.Object.GetProductPriceByKey(0);
+
             Assert.AreEqual(-1, price);
         }
 
-        //[TestMethod]
-        //public void RefillWhenQuantity10ReturnTrue()
-        //{
+        [TestMethod]
+        public void RefillWhenQuantity10ReturnTrue()
+        {
+            ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
 
-        //    Assert.AreEqual(true, service.Refill());
-        //}
+            Assert.AreEqual(2, findedProducts.Count);
+        }
 
         [TestMethod]
         public void GetProductsToRefillWhenProductsWithQuantityLessThan10ReturnsProductsList()
         {
-            IList<Product> products = service.GetProductsToRefill();
-            Assert.AreEqual(2, products.Count);
-            Assert.AreEqual("ProdTest1", products[0].Name);
-            Assert.AreEqual("ProdTest3", products[1].Name);
+            ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
+
+            Assert.AreEqual(2, findedProducts.Count);
         }
 
         [TestMethod]
-        public void GetProductsToRefillWhenProductsWithNoQuantityLessThan10ReturnsEmptyList()
+        public void GetProductsToRefillWhenAllProductsQuantityAre10ReturnsEmptyList()
         {
-            IQueryable<Product> data = new List<Product>
+            products = new List<Product>
             {
                 new Product { Name = "ProdTest1", Quantity=10, Price=10},
                 new Product { Name = "ProdTest2", Quantity=10, Price=10 },
                 new Product { Name = "ProdTest3", Quantity=10, Price=10 },
-            }.AsQueryable();
+            };
 
-            Mock<DbSet<Product>> mockSet = new Mock<DbSet<Product>>();
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Product>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
 
-            Mock<VendMachineDbContext> mockContext = new Mock<VendMachineDbContext>();
-            mockContext.Setup(c => c.Products).Returns(mockSet.Object);
-            service = new ProductCollection(mockContext.Object);
-
-            IList<Product> products = service.GetProductsToRefill();
-            Assert.AreEqual(0, products.Count);
+            Assert.AreEqual(0, findedProducts.Count);
         }
 
         [TestMethod]
         public void GetAllProducts()
         {
-            IList<Product> products = service.GetProducts();
+            ProductCollectionMoq.GetProducts(MockProductRepository, products);
+            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
 
-            Assert.AreEqual(3, products.Count);
-            Assert.AreEqual("ProdTest1", products[0].Name);
-            Assert.AreEqual("ProdTest2", products[1].Name);
-            Assert.AreEqual("ProdTest3", products[2].Name);
+            Assert.AreEqual(3, findedProducts.Count);
         }
-
 
         [TestCleanup]
         public void TestCleanUp()
         {
-            service = null;
+            products = null;
+            MockProductRepository = null;
         }
     }
 }

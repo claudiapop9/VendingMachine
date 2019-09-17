@@ -43,20 +43,6 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        public void DecreaseProductQuantity(int productId)
-        {
-            try
-            {
-                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
-                p.Quantity -= 1;
-                UpdateProduct(p);
-            }
-            catch (Exception)
-            {
-                log.Error("Db connection failed-DecreaseProd");
-            }
-        }
-
         public void RemoveProduct(int productId)
         {
             try
@@ -68,6 +54,20 @@ namespace VendingMachineCodeFirst
             catch (Exception)
             {
                 log.Error("Db connection failed-remove prod");
+            }
+        }
+
+        public void DecreaseProductQuantity(int productId)
+        {
+            try
+            {
+                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
+                p.Quantity -= 1;
+                UpdateProduct(p);
+            }
+            catch (Exception)
+            {
+                log.Error("Db connection failed-DecreaseProd");
             }
         }
 
@@ -83,7 +83,7 @@ namespace VendingMachineCodeFirst
             {
                 log.Error("Db connection failed-GET product by KEY");
                 return -1;
-            }            
+            }
         }
 
         public bool Refill()
@@ -120,7 +120,7 @@ namespace VendingMachineCodeFirst
                 return productQuantity;
             }
             catch (Exception)
-            { 
+            {
                 log.Error("FIND refill products failed");
                 return new List<Product>();
             }
@@ -140,7 +140,7 @@ namespace VendingMachineCodeFirst
                 log.Error("Db connection-GET Prod");
                 return new List<Product>();
             }
-            
+
         }
     }
 }
