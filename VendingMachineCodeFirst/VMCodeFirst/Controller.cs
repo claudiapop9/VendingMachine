@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 
 namespace VendingMachineCodeFirst
@@ -18,7 +19,7 @@ namespace VendingMachineCodeFirst
         private Report report = new Report();
         private IPayment payment;
 
-        public Controller(){}
+        public Controller() { }
 
         public Controller(IPayment paymentMethod)
         {
@@ -27,17 +28,24 @@ namespace VendingMachineCodeFirst
 
         public bool BuyProduct(int productId)
         {
-            double productPrice = productCollection.GetProductPriceByKey(productId);
-            if (productPrice != -1 && payment.IsEnough(productPrice))
+            try
             {
-                productCollection.DecreaseProductQuantity(productId);
-                payment.Pay(productPrice);
-                dataStorage.PersistData(this.productCollection.GetProducts());
-                AddTransition("BUY", productId);
-                return true;
+                double productPrice = productCollection.GetProductPriceByKey(productId);
+                if (payment.IsEnough(productPrice))
+                {
+                    productCollection.DecreaseProductQuantity(productId);
+                    payment.Pay(productPrice);
+                    dataStorage.PersistData(GetProducts());
+                    AddTransition("BUY", productId);
+                    return true;
+                }
+                return false;
             }
-
-            return false;
+            catch (Exception)
+            {
+                log.Error("Db connection failed-GET product by KEY");
+                return false;
+            }
         }
 
         public IList<Product> GetProducts()

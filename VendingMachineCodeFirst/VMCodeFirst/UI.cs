@@ -8,13 +8,15 @@ namespace VendingMachineCodeFirst
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        Controller ctrl = new Controller();
+        Controller ctrl;
+        Validator validator = new Validator();
         IPayment payment;
 
         public void Run()
         {
             while (true)
             {
+                ctrl = new Controller();
                 MainMenu();
             }
         }

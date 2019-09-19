@@ -73,17 +73,9 @@ namespace VendingMachineCodeFirst
 
         public double GetProductPriceByKey(int id)
         {
-            try
-            {
-                Product p = context.Products.Where(x => x.ProductId == id).FirstOrDefault();
-                double price = (Double)p.Price;
-                return price;
-            }
-            catch (Exception)
-            {
-                log.Error("Db connection failed-GET product by KEY");
-                return -1;
-            }
+            Product p = context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+            double price = (Double)p.Price;
+            return price;
         }
 
         public bool Refill()
