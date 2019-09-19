@@ -62,6 +62,7 @@
     <Compile Include="CardPayment.cs" />
     <Compile Include="CashMoney.cs" />
     <Compile Include="CashPayment.cs" />
+    <Compile Include="ConnectAdmin.cs" />
     <Compile Include="IProductCollection.cs" />
     <Compile Include="ProxyServer.cs" />
     <Compile Include="SocketCommunication.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Transaction.cs" />
     <Compile Include="TransactionManager.cs" />
     <Compile Include="UI.cs" />
+    <Compile Include="Validator.cs" />
     <Compile Include="VendMachineDbContext.cs" />
   </ItemGroup>
   <ItemGroup>

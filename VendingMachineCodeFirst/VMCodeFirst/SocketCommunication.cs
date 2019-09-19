@@ -30,16 +30,14 @@ namespace VendingMachineCodeFirst
                     string data = ReceiveConfirmation(handler);
 
                     Console.WriteLine("Text received : {0}", data);
-                    Console.ReadKey();
                     return handler;
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                return null;
             }
-
-            return null;
         }
 
         private Socket InitializeSocket()
@@ -54,13 +52,13 @@ namespace VendingMachineCodeFirst
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(10);
+                return listener;
             }
             catch (Exception e)
             {
                 log.Error("initialize " + e);
+                return listener;
             }
-
-            return listener;
         }
 
         private string ReceiveConfirmation(Socket handler)
@@ -110,15 +108,13 @@ namespace VendingMachineCodeFirst
                 data += Encoding.ASCII.GetString(bytes, 0, bytesRec2);
 
                 Console.WriteLine("Text received 2 : {0}", data);
-                Console.ReadKey();
                 return data;
             }
             catch (Exception e)
             {
                 log.Error("RECEIVE " + e);
-            }
-
-            return data;
+                return data;
+            }           
         }
 
         public void ReleaseSocket()

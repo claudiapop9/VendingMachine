@@ -26,7 +26,6 @@ namespace VendingMachineCodeFirst
             string str = "------------Menu----------------\n\n";
             str += "1.List of products\n";
             str += "2.Buy product\n";
-            str += "3.Communicate with admin\n";
 
             Console.WriteLine(str);
             string c = Console.ReadLine();
@@ -38,12 +37,12 @@ namespace VendingMachineCodeFirst
                 case "2":
                     WayOfPayment();
                     break;
-                case "3":
-                    Communicate();
+                default:
+                    Console.WriteLine("Invalid option :( Try again");
+                    MainMenu();
                     break;
             }
         }
-
 
         public void ShowProductList()
         {
@@ -76,16 +75,10 @@ namespace VendingMachineCodeFirst
                     payment = new CardPayment();
                     ShopMenu();
                     break;
-            }
-        }
-
-        public void Communicate()
-        {
-            SocketCommunication socketCommunication = new SocketCommunication();
-            if (socketCommunication.IsConnected())
-            {
-                ProxyServer proxy = new ProxyServer(socketCommunication);
-                proxy.HandleCommands();
+                default:
+                    Console.WriteLine("Invalid command, try again");
+                    WayOfPayment();
+                    break;
             }
         }
 
@@ -97,23 +90,34 @@ namespace VendingMachineCodeFirst
                 Console.WriteLine("Product id:");
                 int id = Int32.Parse(Console.ReadLine());
                 ctrl = new Controller(payment);
-                if (ctrl.BuyProduct(id))
-                {
-                    Console.WriteLine("Product bought successfully :D");
-                    ShowProductList();
-                    log.Info("Product bought successfully");
-                }
-                else
-                {
-                    Console.WriteLine("The Product wasn't bought :( \n");
-                    Console.ReadKey();
-                    log.Info("The Product wasn't bought :( \n");
-                }
+                BuyProduct(id);
             }
             catch (Exception e)
             {
                 log.Error(e);
             }
+        }
+
+        private void BuyProduct(int id)
+        {
+            if (validator.isIdValid(id))
+            {
+                if (ctrl.BuyProduct(id))
+                {
+                    Console.WriteLine("Product bought successfully :D");
+                    ShowProductList();
+                    log.Info("Product bought successfully");
+                    return;
+                }
+
+                Console.WriteLine("The product wasn't bought :( \n");
+                Console.ReadKey();
+                log.Info("The Product wasn't bought :( \n");
+            }
+
+            Console.WriteLine("Invalid id :( \n");
+            Console.ReadKey();
+            log.Info("Invalid id :( \n");
         }
     }
 }
