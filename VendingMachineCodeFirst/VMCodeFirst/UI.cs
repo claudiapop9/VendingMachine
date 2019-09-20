@@ -90,7 +90,7 @@ namespace VendingMachineCodeFirst
                 Console.WriteLine("Product id:");
                 int id = Int32.Parse(Console.ReadLine());
                 ctrl = new Controller(payment);
-                BuyProduct(id);
+                BuyValidatedProduct(id);
             }
             catch (Exception e)
             {
@@ -98,7 +98,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        private void BuyProduct(int id)
+        private void BuyValidatedProduct(int id)
         {
             if (validator.isIdValid(id))
             {

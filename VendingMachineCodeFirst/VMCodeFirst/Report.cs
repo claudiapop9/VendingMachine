@@ -58,7 +58,7 @@ namespace VendingMachineCodeFirst
                 }
                 return str;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 log.Error("GET REFILL failed");
                 return "Last refill date missing";
