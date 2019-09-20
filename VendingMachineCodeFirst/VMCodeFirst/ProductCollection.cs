@@ -10,19 +10,16 @@ namespace VendingMachineCodeFirst
     public class ProductCollection : IProductCollection
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private VendMachineDbContext context;
-
-        public ProductCollection(VendMachineDbContext context)
-        {
-            this.context = context;
-        }
-
+        
         public void AddProduct(Product p)
         {
             try
             {
-                context.Products.Add(p);
-                context.SaveChanges();
+                using (var context = new VendMachineDbContext())
+                {
+                    context.Products.Add(p);
+                    context.SaveChanges();
+                }
             }
             catch (Exception)
             {
@@ -34,8 +31,11 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                context.Entry(p).State = EntityState.Modified;
-                context.SaveChanges();
+                using (var context = new VendMachineDbContext())
+                {
+                    context.Entry(p).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
             }
             catch (Exception)
             {
@@ -47,9 +47,12 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
-                context.Products.Remove(p);
-                context.SaveChanges();
+                using (var context = new VendMachineDbContext())
+                {
+                    Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
+                    context.Products.Remove(p);
+                    context.SaveChanges();
+                }
             }
             catch (Exception)
             {
@@ -61,9 +64,12 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
-                p.Quantity -= 1;
-                UpdateProduct(p);
+                using (var context = new VendMachineDbContext())
+                {
+                    Product p = context.Products.Where(x => x.ProductId == productId).FirstOrDefault();
+                    p.Quantity -= 1;
+                    UpdateProduct(p);
+                }
             }
             catch (Exception)
             {
@@ -73,9 +79,12 @@ namespace VendingMachineCodeFirst
 
         public double GetProductPriceByKey(int id)
         {
-            Product p = context.Products.Where(x => x.ProductId == id).FirstOrDefault();
-            double price = (Double)p.Price;
-            return price;
+            using (var context = new VendMachineDbContext())
+            {
+                Product p = context.Products.Where(x => x.ProductId == id).FirstOrDefault();
+                double price = (Double)p.Price;
+                return price;
+            }
         }
 
         public bool Refill()
@@ -83,12 +92,14 @@ namespace VendingMachineCodeFirst
             try
             {
                 IList<Product> productQuantity = GetProductsToRefill();
-
-                foreach (Product prod in productQuantity)
+                using (var context = new VendMachineDbContext())
                 {
-                    prod.Quantity = 10;
-                    context.Entry(prod).State = EntityState.Modified;
-                    context.SaveChanges();
+                    foreach (Product prod in productQuantity)
+                    {
+                        prod.Quantity = 10;
+                        context.Entry(prod).State = EntityState.Modified;
+                        context.SaveChanges();
+                    }
                 }
 
                 log.Info("REFILL successful");
@@ -106,10 +117,13 @@ namespace VendingMachineCodeFirst
         {
             try
             {
-                IList<Product> productQuantity = (from product in context.Products
-                                                  where (product.Quantity != 10)
-                                                  select product).ToList();
-                return productQuantity;
+                using (var context = new VendMachineDbContext())
+                {
+                    IList<Product> productQuantity = (from product in context.Products
+                                                      where (product.Quantity != 10)
+                                                      select product).ToList();
+                    return productQuantity;
+                }
             }
             catch (Exception)
             {
@@ -118,14 +132,16 @@ namespace VendingMachineCodeFirst
             }
         }
 
-
         public IList<Product> GetProducts()
         {
             try
             {
-                List<Product> products = new List<Product>();
-                products = context.Products.ToList<Product>();
-                return products;
+                using (var context = new VendMachineDbContext())
+                {
+                    List<Product> products = new List<Product>();
+                    products = context.Products.ToList<Product>();
+                    return products;
+                }
             }
             catch (Exception)
             {

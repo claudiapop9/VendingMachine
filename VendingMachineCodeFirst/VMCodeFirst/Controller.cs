@@ -13,7 +13,7 @@ namespace VendingMachineCodeFirst
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ProductCollection productCollection = new ProductCollection(new VendMachineDbContext());
+        private readonly ProductCollection productCollection = new ProductCollection();
         private Data dataStorage = new Data(filePath, filePathAllStates);
         private TransactionManager transactionManager = new TransactionManager();
         private Report report = new Report();
