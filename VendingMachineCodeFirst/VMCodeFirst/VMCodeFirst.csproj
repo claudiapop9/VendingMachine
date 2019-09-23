@@ -61,11 +61,11 @@
     <Compile Include="AdminRequest.cs" />
     <Compile Include="Service\CardService.cs" />
     <Compile Include="CashMoney.cs" />
-    <Compile Include="CashPayment.cs" />
     <Compile Include="ConnectAdmin.cs" />
     <Compile Include="IPaymentCardExtended.cs" />
     <Compile Include="IProductCollection.cs" />
     <Compile Include="ProxyServer.cs" />
+    <Compile Include="Service\CashService.cs" />
     <Compile Include="SocketCommunication.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="IPayment.cs" />

@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 
-namespace VendingMachineCodeFirst
+namespace VendingMachineCodeFirst.Service
 {
     class CardService : IPayment
     {
