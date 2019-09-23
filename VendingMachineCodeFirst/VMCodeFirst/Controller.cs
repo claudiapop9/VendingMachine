@@ -14,9 +14,9 @@ namespace VendingMachineCodeFirst
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly ProductCollection productCollection = new ProductCollection();
-        private Data dataStorage = new Data(filePath, filePathAllStates);
+        private DataService dataStorage = new DataService(filePath, filePathAllStates);
         private TransactionManager transactionManager = new TransactionManager();
-        private Report report = new Report();
+        private ReportService report = new ReportService();
         private IPayment payment;
 
         public Controller() { }

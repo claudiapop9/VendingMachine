@@ -5,14 +5,14 @@ using System.IO;
 
 namespace VendingMachineCodeFirst
 {
-    class Data
+    class DataService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string filePath;
         private readonly string filePathAll;
 
-        public Data(string filePath, string filePathAll)
+        public DataService(string filePath, string filePathAll)
         {
             this.filePath = filePath;
             this.filePathAll = filePathAll;
