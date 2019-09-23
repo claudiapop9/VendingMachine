@@ -34,9 +34,9 @@ namespace VMCodeFirstTests
 
             Product p = new Product { ProductId = 0, Name = "ProdTest1a", Quantity = 4, Price = 10 };
             MockProductRepository.Object.AddProduct(p);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProducts();
 
-            Assert.AreEqual(findedProducts.Count, products.Count);
+            Assert.AreEqual(foundProducts.Count, products.Count);
         }
 
         [TestMethod]
@@ -47,9 +47,9 @@ namespace VMCodeFirstTests
 
             Product p = new Product { ProductId = 0, Name = "ProdTest1a", Quantity = 4, Price = 10 };
             MockProductRepository.Object.UpdateProduct(p);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProducts();
 
-            string updatedName = findedProducts.FirstOrDefault(product => product.ProductId == p.ProductId).Name;
+            string updatedName = foundProducts.FirstOrDefault(product => product.ProductId == p.ProductId).Name;
 
             Assert.AreEqual("ProdTest1a", updatedName);
         }
@@ -62,9 +62,9 @@ namespace VMCodeFirstTests
 
             MockProductRepository.Object.RemoveProduct(0);
 
-            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProducts();
 
-            Assert.AreEqual(2, findedProducts.Count);
+            Assert.AreEqual(2, foundProducts.Count);
         }
 
         [TestMethod]
@@ -75,8 +75,8 @@ namespace VMCodeFirstTests
 
             MockProductRepository.Object.DecreaseProductQuantity(0);
 
-            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
-            int updatedQuantity = findedProducts.FirstOrDefault(product => product.ProductId == 0).Quantity;
+            IList<Product> foundProducts = MockProductRepository.Object.GetProducts();
+            int updatedQuantity = foundProducts.FirstOrDefault(product => product.ProductId == 0).Quantity;
 
             Assert.AreEqual(5, updatedQuantity);
         }
@@ -109,18 +109,18 @@ namespace VMCodeFirstTests
         public void RefillWhenQuantity10ReturnTrue()
         {
             ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProductsToRefill();
 
-            Assert.AreEqual(2, findedProducts.Count);
+            Assert.AreEqual(2, foundProducts.Count);
         }
 
         [TestMethod]
         public void GetProductsToRefillWhenProductsWithQuantityLessThan10ReturnsProductsList()
         {
             ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProductsToRefill();
 
-            Assert.AreEqual(2, findedProducts.Count);
+            Assert.AreEqual(2, foundProducts.Count);
         }
 
         [TestMethod]
@@ -134,18 +134,18 @@ namespace VMCodeFirstTests
             };
 
             ProductCollectionMoq.GetProductsToRefill(MockProductRepository, products);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProductsToRefill();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProductsToRefill();
 
-            Assert.AreEqual(0, findedProducts.Count);
+            Assert.AreEqual(0, foundProducts.Count);
         }
 
         [TestMethod]
         public void GetAllProducts()
         {
             ProductCollectionMoq.GetProducts(MockProductRepository, products);
-            IList<Product> findedProducts = MockProductRepository.Object.GetProducts();
+            IList<Product> foundProducts = MockProductRepository.Object.GetProducts();
 
-            Assert.AreEqual(3, findedProducts.Count);
+            Assert.AreEqual(3, foundProducts.Count);
         }
 
         [TestCleanup]

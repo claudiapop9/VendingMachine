@@ -10,7 +10,7 @@ namespace VendingMachineCodeFirst
     public class ProductCollection : IProductCollection
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
+
         public void AddProduct(Product p)
         {
             try
@@ -138,9 +138,7 @@ namespace VendingMachineCodeFirst
             {
                 using (var context = new VendMachineDbContext())
                 {
-                    List<Product> products = new List<Product>();
-                    products = context.Products.ToList<Product>();
-                    return products;
+                    return context.Products.ToList<Product>(); ;
                 }
             }
             catch (Exception)
@@ -148,7 +146,6 @@ namespace VendingMachineCodeFirst
                 log.Error("Db connection-GET Prod");
                 return new List<Product>();
             }
-
         }
     }
 }

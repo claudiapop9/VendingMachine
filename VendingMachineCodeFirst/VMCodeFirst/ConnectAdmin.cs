@@ -1,7 +1,7 @@
 ﻿namespace VendingMachineCodeFirst
 {
     class ConnectAdmin
-    {  
+    {
         public void Communicate()
         {
             SocketCommunication socketCommunication = new SocketCommunication();
@@ -11,6 +11,7 @@
                 ProxyServer proxy = new ProxyServer(socketCommunication);
                 proxy.HandleCommands();
             }
+            socketCommunication.ReleaseSocket();
         }
     }
 }

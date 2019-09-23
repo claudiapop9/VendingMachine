@@ -1,4 +1,5 @@
 ﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VendingMachineCodeFirst;
@@ -19,14 +20,14 @@ namespace VMCodeFirstTests.ProductCollectionTest
         public static void UpdateProduct(Mock<IProductCollection> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.UpdateProduct(It.IsAny<Product>())).Callback(
-                (Product addedProduct) =>
-                {
-                    Product toUpdate = products.FirstOrDefault(product => product.ProductId == addedProduct.ProductId);
-                    if (toUpdate == default(Product))
-                        throw new System.Exception("Product doesn't exists");
-                    products.Remove(toUpdate);
-                    products.Add(addedProduct);
-                });
+               (Product addedProduct) =>
+               {
+                   Product toUpdate = products.FirstOrDefault(product => product.ProductId == addedProduct.ProductId);
+                   if (toUpdate == default(Product))
+                       throw new Exception("Product doesn't exists");
+                   products.Remove(toUpdate);
+                   products.Add(addedProduct);
+               });
         }
 
         public static void RemoveProduct(Mock<IProductCollection> MockProductCollection, IList<Product> products)
@@ -36,7 +37,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                 {
                     Product toDelete = products.FirstOrDefault(product => product.ProductId == deletedProduct);
                     if (toDelete == default(Product))
-                        throw new System.Exception();
+                        throw new Exception();
                     products.Remove(toDelete);
                 });
         }
@@ -48,7 +49,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                {
                    Product toDecrease = products.FirstOrDefault(product => product.ProductId == decreasedQuantityProduct);
                    if (toDecrease == default(Product))
-                       throw new System.Exception();
+                       throw new Exception();
 
                    Product updatedProduct = toDecrease;
                    updatedProduct.Quantity -= 1;

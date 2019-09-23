@@ -103,6 +103,7 @@ namespace VendingMachineCodeFirst
             {
                 socketCommunication.SendData("Success REFILL");
             }
+
             socketCommunication.SendData("Fail REFILL");
         }
 
