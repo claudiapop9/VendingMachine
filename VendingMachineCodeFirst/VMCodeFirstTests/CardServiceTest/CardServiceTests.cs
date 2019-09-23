@@ -5,10 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VendingMachineCodeFirst;
 
-namespace VMCodeFirstTests.CardPaymentTest
+namespace VMCodeFirstTests.CardServiceTest
 {
     [TestClass]
-    public class CardPaymentTests
+    public class CardServiceTests
     {
         IList<Account> accounts;
         Mock<IPaymentCardExtended> MockCardPayment;
@@ -29,8 +29,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void Pay()
         {
-            CardPaymentMoq.Pay(MockCardPayment, accounts, "CardNO1");
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.Pay(MockCardPayment, accounts, "CardNO1");
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             MockCardPayment.Object.Pay(10);
             IList<Account> foundedAccounts = MockCardPayment.Object.GetAccounts();
@@ -42,8 +42,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isEnoughWhenCostLowerThanAmmount()
         {
-            CardPaymentMoq.IsEnough(MockCardPayment, accounts, "CardNO1");
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsEnough(MockCardPayment, accounts, "CardNO1");
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isEnough = MockCardPayment.Object.IsEnough(5);
 
@@ -53,8 +53,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isEnoughWhenCosEqualWithAmmount()
         {
-            CardPaymentMoq.IsEnough(MockCardPayment, accounts, "CardNO2");
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsEnough(MockCardPayment, accounts, "CardNO2");
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isEnough = MockCardPayment.Object.IsEnough(50);
 
@@ -64,8 +64,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isEnoughWhenCostBiggerThanAmmount()
         {
-            CardPaymentMoq.IsEnough(MockCardPayment, accounts, "CardNO3");
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsEnough(MockCardPayment, accounts, "CardNO3");
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isEnough = MockCardPayment.Object.IsEnough(16);
 
@@ -75,8 +75,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isValidCardWhenValidCard()
         {
-            CardPaymentMoq.IsValidCard(MockCardPayment, accounts);
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsValidCard(MockCardPayment, accounts);
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isValid = MockCardPayment.Object.IsValidCard("CardNO1", "6789");
             Assert.AreEqual(true, isValid);
@@ -85,8 +85,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isValidCardWhen_ValidCardNO_InvalidPin()
         {
-            CardPaymentMoq.IsValidCard(MockCardPayment, accounts);
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsValidCard(MockCardPayment, accounts);
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isValid = MockCardPayment.Object.IsValidCard("CardNO1", "6666");
             Assert.AreEqual(false, isValid);
@@ -95,8 +95,8 @@ namespace VMCodeFirstTests.CardPaymentTest
         [TestMethod]
         public void isValidCardWhen_InvalidCard()
         {
-            CardPaymentMoq.IsValidCard(MockCardPayment, accounts);
-            CardPaymentMoq.GetAccounts(MockCardPayment, accounts);
+            CardServiceMoq.IsValidCard(MockCardPayment, accounts);
+            CardServiceMoq.GetAccounts(MockCardPayment, accounts);
 
             bool isValid = MockCardPayment.Object.IsValidCard("InvalidCard", "6666");
             Assert.AreEqual(false, isValid);

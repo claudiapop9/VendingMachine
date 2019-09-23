@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using VendingMachineCodeFirst;
 
-namespace VMCodeFirstTests.CardPaymentTest
+namespace VMCodeFirstTests.CardServiceTest
 {
-    public static class CardPaymentMoq
+    public static class CardServiceMoq
     {
         public static void Pay(Mock<IPaymentCardExtended> MockCardPayment, IList<Account> accounts, string cardNo)
         {

@@ -69,8 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardPaymentTest\CardPaymentMoq.cs" />
-    <Compile Include="CardPaymentTest\CardPaymentTests.cs" />
+    <Compile Include="CardServiceTest\CardServiceMoq.cs" />
+    <Compile Include="CardServiceTest\CardServiceTests.cs" />
     <Compile Include="ControllerTest\ControllerTests.cs" />
     <Compile Include="ProductCollectionTest\ProductCollectionMoq.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

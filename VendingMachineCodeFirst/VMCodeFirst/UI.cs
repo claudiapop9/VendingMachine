@@ -67,12 +67,12 @@ namespace VendingMachineCodeFirst
             {
                 case "1":
                     log.Info("Cash Payment");
-                    payment = new CashPayment();
+                    payment = new CashService();
                     ShopMenu();
                     break;
                 case "2":
                     log.Info("Card Payment");
-                    payment = new CardPayment();
+                    payment = new CardService();
                     ShopMenu();
                     break;
                 default:

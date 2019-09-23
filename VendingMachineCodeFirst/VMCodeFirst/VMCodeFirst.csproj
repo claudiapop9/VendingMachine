@@ -59,7 +59,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AdminRequest.cs" />
-    <Compile Include="CardPayment.cs" />
+    <Compile Include="Service\CardService.cs" />
     <Compile Include="CashMoney.cs" />
     <Compile Include="CashPayment.cs" />
     <Compile Include="ConnectAdmin.cs" />

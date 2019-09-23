@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VendingMachineCodeFirst
 {
-    class CardPayment : IPayment
+    class CardService : IPayment
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string cardNo;
