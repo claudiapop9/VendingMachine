@@ -1,6 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
-using System;
 
 namespace VendingMachineCodeFirst
 {
@@ -41,19 +41,19 @@ namespace VendingMachineCodeFirst
 
                         return true;
                     }
+                    return false;
 
                 }
             }
             catch (Exception)
             {
                 log.Error("Db connection failed");
-            }
-            return false;
+                return false;
+            }            
         }
 
         private void AskDetails()
         {
-
             Console.WriteLine("CardNo:");
             string cardNo = Console.ReadLine();
             Console.WriteLine("PIN:");
@@ -86,8 +86,8 @@ namespace VendingMachineCodeFirst
             catch (Exception)
             {
                 log.Error("Db connection failed");
-            }
-            return false;
+                return false;
+            }  
         }
     }
 }
