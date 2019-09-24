@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst
 {
-    class CashMoneyCollection: ICashMoneyCollection
+    class CashMoneyCollection : ICashMoneyCollection
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
