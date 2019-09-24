@@ -1,62 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using Moq;
+using System;
 using System.Linq;
+using VendingMachineCodeFirst;
+using System.Collections.Generic;
 
-namespace VendingMachineCodeFirst
+namespace VMCodeFirstTests.CashMoneyCollectionTest
 {
-    class CashMoneyCollection: ICashMoneyCollection
+    public static class CashMoneyCollectionMoq
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public void UpdateMoney(double value, int quantity)
+        public static void UpdateMoney(Mock<ICashMoneyCollectionExtended> MockCashMoneyCollection, IList<CashMoney> money)
         {
-            try
-            {
-                using (var db = new VendMachineDbContext())
-                {
-                    CashMoney cashMoney = db.Money.Where(x => x.MoneyValue == value).FirstOrDefault();
-                    cashMoney.Quantity += quantity;
-                    db.Entry(cashMoney).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception)
-            {
-                log.Error("Fail database connection\n");
-            }
+            MockCashMoneyCollection.Setup(mock => mock.UpdateMoney(It.IsAny<double>(), It.IsAny<int>())).Callback(
+               (double value, int quantity) =>
+               {
+                   CashMoney cashMoney = money.Where(x => x.MoneyValue == value).FirstOrDefault();
+                   money.Remove(cashMoney);
+                   cashMoney.Quantity += quantity;
+                   money.Add(cashMoney);
+               });
         }
 
-        public void GiveChange(double change)
+        public static void GiveChange(Mock<ICashMoneyCollectionExtended> MockCashMoneyCollection, IList<CashMoney> money)
         {
-            List<CashMoney> money = new List<CashMoney>();
-            List<CashMoney> changedMoney = new List<CashMoney>();
-            try
-            {
-                using (var db = new VendMachineDbContext())
+            MockCashMoneyCollection.Setup(mock => mock.GiveChange(It.IsAny<double>())).Callback(
+                (double change) =>
                 {
-                    money = db.Money.ToList<CashMoney>();
-                    changedMoney = CalculateMinimum(money, change);
-                    Console.WriteLine("Change: ");
-                    for (int i = 0; i < changedMoney.Count; i++)
+                    IList<CashMoney> changedMoney = CalculateMinimum(money, change);
+                    foreach (CashMoney coinFromChange in changedMoney)
                     {
-                        CashMoney coinFromChange = changedMoney[i];
-                        Console.Write(changedMoney[i] + " ");
-                        CashMoney cashMoney = db.Money.Where(x => x.MoneyValue == coinFromChange.MoneyValue).FirstOrDefault();
-                        cashMoney.Quantity -= coinFromChange.Quantity;
-                        db.Entry(cashMoney).State = EntityState.Modified;
-                        db.SaveChanges();
+                        CashMoney cash = money.Where(x => x.MoneyValue == coinFromChange.MoneyValue).FirstOrDefault();
+                        money.Remove(cash);
+                        cash.Quantity -= coinFromChange.Quantity;
+                        money.Add(cash);
                     }
-                    log.Info("GIVE Change success");
-                }
-            }
-            catch (Exception)
-            {
-                log.Error("Fail database connection-GIVE Change");
-            }
+                });
         }
 
-        private static List<CashMoney> CalculateMinimum(IList<CashMoney> coins, double change)
+        private static IList<CashMoney> CalculateMinimum(IList<CashMoney> coins, double change)
         {
             // used to store the minimum matches
             List<CashMoney> minimalMatch = null;
@@ -120,6 +100,9 @@ namespace VendingMachineCodeFirst
             return null;
         }
 
+        public static void GetMoney(Mock<ICashMoneyCollectionExtended> MockCashMoneyCollection, IList<CashMoney> money)
+        {
+            MockCashMoneyCollection.Setup(mock => mock.GetCashMoney()).Returns(money);
+        }
     }
 }
-
