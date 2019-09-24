@@ -38,7 +38,6 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
 
         private static IList<CashMoney> CalculateMinimum(IList<CashMoney> coins, double change)
         {
-            // used to store the minimum matches
             List<CashMoney> minimalMatch = null;
             int minimalCount = -1;
 
@@ -55,7 +54,6 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
                         minimalCount = matchCount;
                     }
                 }
-                // reduce the list of possible coins
                 subset = subset.Skip(1).ToList();
             }
 

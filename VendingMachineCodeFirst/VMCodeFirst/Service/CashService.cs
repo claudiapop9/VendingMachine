@@ -3,14 +3,28 @@ using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst.Service
 {
-    class CashService : IPayment
+    public class CashService : IPayment
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private CashMoneyCollection cashMoneyCollection = new CashMoneyCollection();
-        private List<CashMoney> introducedMoney = new List<CashMoney>();
-        private List<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
+        private ICashMoneyCollection cashMoneyCollection;
+        private IList<CashMoney> introducedMoney = new List<CashMoney>();
+        private IList<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
         private double totalMoney = 0;
 
+        public CashService()
+        {
+            this.cashMoneyCollection = new CashMoneyCollection();
+        }
+        public CashService(ICashMoneyCollection moneyCollection)
+        {
+            this.cashMoneyCollection = moneyCollection;
+        }
+        public CashService(ICashMoneyCollection moneyCollection, IList<CashMoney> introducedMoney, double totalMoney)
+        {
+            this.cashMoneyCollection = moneyCollection;
+            this.introducedMoney = introducedMoney;
+            this.totalMoney = totalMoney;
+        }
         public void Pay(double cost)
         {
             if (cost.Equals(totalMoney))

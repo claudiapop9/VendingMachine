@@ -73,6 +73,7 @@
     <Compile Include="CardServiceTest\CardServiceTests.cs" />
     <Compile Include="CashMoneyCollectionTest\CashMoneyCollectionMoq.cs" />
     <Compile Include="CashMoneyCollectionTest\CashMoneyCollectionTests.cs" />
+    <Compile Include="CashMoneyServiceTest\CashMoneyServiceTests.cs" />
     <Compile Include="ControllerTest\ControllerTests.cs" />
     <Compile Include="ProductCollectionTest\ProductCollectionMoq.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
