@@ -11,7 +11,7 @@ namespace VMCodeFirstTests
     public class ProductionCollectionTests
     {
         IList<Product> products;
-        Mock<IProductCollection> MockProductRepository;
+        Mock<IProductRepository> MockProductRepository;
 
         [TestInitialize]
         public void TestInit()
@@ -23,7 +23,7 @@ namespace VMCodeFirstTests
                 new Product {ProductId=2, Name = "ProdTest3", Quantity=10, Price=15 },
             };
 
-            MockProductRepository = new Mock<IProductCollection>();
+            MockProductRepository = new Mock<IProductRepository>();
         }
 
         [TestMethod]

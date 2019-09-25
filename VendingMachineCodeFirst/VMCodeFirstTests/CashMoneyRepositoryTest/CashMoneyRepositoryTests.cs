@@ -7,10 +7,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace VMCodeFirstTests.CashMoneyCollectionTest
 {
     [TestClass]
-    public class CashMoneyCollectionTests
+    public class CashMoneyRepositoryTests
     {
         IList<CashMoney> money;
-        Mock<ICashMoneyCollectionExtended> MockCashMoneyCollection;
+        Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection;
 
         [TestInitialize]
         public void TestInit()
@@ -23,14 +23,14 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 10 }
             };
 
-            MockCashMoneyCollection = new Mock<ICashMoneyCollectionExtended>();
+            MockCashMoneyCollection = new Mock<ICashMoneyRepositoryExtended >();
         }
 
         [TestMethod]
         public void GiveChange()
         {
-            CashMoneyCollectionMoq.GiveChange(MockCashMoneyCollection, money);
-            CashMoneyCollectionMoq.GetMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
 
             MockCashMoneyCollection.Object.GiveChange(2.5);
 
@@ -46,8 +46,8 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
         [TestMethod]
         public void UpdateMoney()
         {
-            CashMoneyCollectionMoq.UpdateMoney(MockCashMoneyCollection, money);
-            CashMoneyCollectionMoq.GetMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
 
             MockCashMoneyCollection.Object.UpdateMoney(10, 2);
 

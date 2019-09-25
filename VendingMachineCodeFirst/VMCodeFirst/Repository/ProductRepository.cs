@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace VendingMachineCodeFirst
 {
-    public class ProductCollection : IProductCollection
+    public class ProductRepository : IProductRepository
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

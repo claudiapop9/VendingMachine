@@ -11,8 +11,8 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
     [TestClass]
     public class CashMoneyServiceTests
     {
-        Mock<ICashMoneyCollectionExtended> MockCashMoneyCollection;
-        private CashService cashService;
+        Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection;
+        private CashPayment cashService;
 
         [TestInitialize]
         public void TestInit()
@@ -24,10 +24,10 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
                 new CashMoney() { Id = 3, MoneyValue = 1, Quantity = 10 },
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 10 }
             };
-            MockCashMoneyCollection = new Mock<ICashMoneyCollectionExtended>();
-            CashMoneyCollectionMoq.GetMoney(MockCashMoneyCollection, money);
-            CashMoneyCollectionMoq.UpdateMoney(MockCashMoneyCollection, money);
-            CashMoneyCollectionMoq.GiveChange(MockCashMoneyCollection, money);
+            MockCashMoneyCollection = new Mock<ICashMoneyRepositoryExtended >();
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyCollection, money);
 
             IList<CashMoney> introducedMoney = new List<CashMoney>()
             {
@@ -36,7 +36,7 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 1 }
             };
             double total = 9.5;
-            cashService = new CashService(MockCashMoneyCollection.Object, introducedMoney, total);
+            cashService = new CashPayment(MockCashMoneyCollection.Object, introducedMoney, total);
         }
 
         [TestMethod]

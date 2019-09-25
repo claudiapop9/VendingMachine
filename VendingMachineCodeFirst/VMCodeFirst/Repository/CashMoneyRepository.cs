@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst
 {
-    public class CashMoneyCollection : ICashMoneyCollection
+    public class CashMoneyRepository : ICashMoneyRepository
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

@@ -72,8 +72,8 @@
   <ItemGroup>
     <Compile Include="CardServiceTest\CardServiceMoq.cs" />
     <Compile Include="CardServiceTest\CardServiceTests.cs" />
-    <Compile Include="CashMoneyCollectionTest\CashMoneyCollectionMoq.cs" />
-    <Compile Include="CashMoneyCollectionTest\CashMoneyCollectionTests.cs" />
+    <Compile Include="CashMoneyRepositoryTest\CashMoneyRepositoryMoq.cs" />
+    <Compile Include="CashMoneyRepositoryTest\CashMoneyRepositoryTests.cs" />
     <Compile Include="CashMoneyServiceTest\CashMoneyServiceTests.cs" />
     <Compile Include="ControllerTest\ControllerTests.cs" />
     <Compile Include="ProductCollectionTest\ProductCollectionMoq.cs" />

@@ -2,7 +2,7 @@
 
 namespace VendingMachineCodeFirst
 {
-    public interface ICashMoneyCollectionExtended:ICashMoneyCollection
+    public interface ICashMoneyRepositoryExtended :ICashMoneyRepository
     {
        IList<CashMoney> GetCashMoney();
     }

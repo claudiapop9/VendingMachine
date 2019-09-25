@@ -8,7 +8,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
 {
     public static class ProductCollectionMoq
     {
-        public static void AddProduct(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void AddProduct(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.AddProduct(It.IsAny<Product>())).Callback(
                 (Product addedProduct) =>
@@ -17,7 +17,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                 });
         }
 
-        public static void UpdateProduct(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void UpdateProduct(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.UpdateProduct(It.IsAny<Product>())).Callback(
                (Product addedProduct) =>
@@ -30,7 +30,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                });
         }
 
-        public static void RemoveProduct(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void RemoveProduct(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.RemoveProduct(It.IsAny<int>())).Callback(
                 (int deletedProduct) =>
@@ -42,7 +42,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                 });
         }
 
-        public static void DecreaseProductQuantity(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void DecreaseProductQuantity(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.DecreaseProductQuantity(It.IsAny<int>())).Callback(
                (int decreasedQuantityProduct) =>
@@ -59,7 +59,7 @@ namespace VMCodeFirstTests.ProductCollectionTest
                });
         }
 
-        public static void GetProductPriceByKey(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void GetProductPriceByKey(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.GetProductPriceByKey(It.IsAny<int>())).Returns(
                 (int id) =>
@@ -71,12 +71,12 @@ namespace VMCodeFirstTests.ProductCollectionTest
                 });
         }
 
-        public static void GetProductsToRefill(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void GetProductsToRefill(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.GetProductsToRefill()).Returns(products.Where(product => product.Quantity < 10).ToList());
         }
 
-        public static void GetProducts(Mock<IProductCollection> MockProductCollection, IList<Product> products)
+        public static void GetProducts(Mock<IProductRepository> MockProductCollection, IList<Product> products)
         {
             MockProductCollection.Setup(mock => mock.GetProducts()).Returns(products);
         }

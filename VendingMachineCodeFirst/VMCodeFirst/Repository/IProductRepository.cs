@@ -2,7 +2,7 @@
 
 namespace VendingMachineCodeFirst
 {
-    public interface IProductCollection
+    public interface IProductRepository
     {
         void AddProduct(Product p);
 
