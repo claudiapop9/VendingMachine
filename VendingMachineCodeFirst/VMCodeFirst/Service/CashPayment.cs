@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst.Service
 {
-    public class CashService : IPayment
+    public class CashPayment : IPayment
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private ICashMoneyCollection cashMoneyCollection;
+        private ICashMoneyRepository cashMoneyRepository;
         private IList<CashMoney> introducedMoney = new List<CashMoney>();
         private IList<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
         private double totalMoney = 0;
 
-        public CashService()
+        public CashPayment()
         {
-            this.cashMoneyCollection = new CashMoneyCollection();
+            this.cashMoneyRepository = new CashMoneyRepository();
         }
-        public CashService(ICashMoneyCollection moneyCollection)
+        public CashPayment(ICashMoneyRepository moneyCollection)
         {
-            this.cashMoneyCollection = moneyCollection;
+            this.cashMoneyRepository = moneyCollection;
         }
-        public CashService(ICashMoneyCollection moneyCollection, IList<CashMoney> introducedMoney, double totalMoney)
+        public CashPayment(ICashMoneyRepository moneyCollection, IList<CashMoney> introducedMoney, double totalMoney)
         {
-            this.cashMoneyCollection = moneyCollection;
+            this.cashMoneyRepository = moneyCollection;
             this.introducedMoney = introducedMoney;
             this.totalMoney = totalMoney;
         }
@@ -33,7 +33,7 @@ namespace VendingMachineCodeFirst.Service
                 {
                     double value = (double)entry.MoneyValue;
                     int quantity = (Int32)entry.Quantity;
-                    cashMoneyCollection.UpdateMoney(value, quantity);
+                    cashMoneyRepository.UpdateMoney(value, quantity);
                 }
             }
             else if (cost < totalMoney)
@@ -42,15 +42,14 @@ namespace VendingMachineCodeFirst.Service
                 {
                     double value = (double)entry.MoneyValue;
                     int quantity = (Int32)entry.Quantity;
-                    cashMoneyCollection.UpdateMoney(value, quantity);
+                    cashMoneyRepository.UpdateMoney(value, quantity);
                 }
-                cashMoneyCollection.GiveChange(totalMoney - cost);
+                cashMoneyRepository.GiveChange(totalMoney - cost);
             }
         }
 
         public bool IsEnough(double cost)
         {
-            AskForMoney(cost);
             return cost <= totalMoney;
         }
 
@@ -87,6 +86,11 @@ namespace VendingMachineCodeFirst.Service
             {
                 throw new Exception("Money not accepted");
             }
+        }
+
+        public bool IsValid()
+        {
+            throw new NotImplementedException();
         }
     }
 }

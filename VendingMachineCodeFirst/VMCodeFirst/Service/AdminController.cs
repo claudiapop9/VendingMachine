@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Newtonsoft.Json;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst
 {
-    class ProxyServer
+    class AdminController
     {
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SocketCommunication socketCommunication;
-        private Controller controller = new Controller();
+        private ClientService service = new ClientService();
 
-        public ProxyServer(SocketCommunication socketCommunication)
+        public AdminController(SocketCommunication socketCommunication)
         {
             this.socketCommunication = socketCommunication;
         }
@@ -70,14 +70,14 @@ namespace VendingMachineCodeFirst
 
         private void GetProducts()
         {
-            IList<Product> list = controller.GetProducts();
+            IList<Product> list = service.GetProducts();
             socketCommunication.SendData(JsonConvert.SerializeObject(list));
         }
 
         private void AddProduct(string data)
         {
             Product product = JsonConvert.DeserializeObject<Product>(data);
-            controller.AddProduct(product);
+            service.AddProduct(product);
             log.Info(product);
             socketCommunication.SendData("Success ADD");
         }
@@ -85,7 +85,7 @@ namespace VendingMachineCodeFirst
         private void UpdateProduct(string data)
         {
             Product productToUpdate = JsonConvert.DeserializeObject<Product>(data);
-            controller.UpdateProduct(productToUpdate);
+            service.UpdateProduct(productToUpdate);
             log.Info(productToUpdate);
             socketCommunication.SendData("Success UPDATE");
         }
@@ -93,13 +93,13 @@ namespace VendingMachineCodeFirst
         private void Delete(string data)
         {
             int id = JsonConvert.DeserializeObject<int>(data);
-            controller.DeleteProduct(id);
+            service.DeleteProduct(id);
             socketCommunication.SendData("Success DELETE");
         }
 
         private void Refill()
         {
-            if (controller.Refill())
+            if (service.Refill())
             {
                 socketCommunication.SendData("Success REFILL");
             }
@@ -109,7 +109,7 @@ namespace VendingMachineCodeFirst
 
         private void Report()
         {
-            string dataReport = controller.GenerateReport();
+            string dataReport = service.GenerateReport();
             if (dataReport != null)
             {
                 socketCommunication.SendData(dataReport);
