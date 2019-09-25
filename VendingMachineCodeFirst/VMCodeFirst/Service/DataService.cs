@@ -5,7 +5,7 @@ using System.IO;
 
 namespace VendingMachineCodeFirst
 {
-    class DataService
+    public class DataService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
