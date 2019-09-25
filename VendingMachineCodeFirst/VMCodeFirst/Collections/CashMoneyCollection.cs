@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace VendingMachineCodeFirst
 {
-    class CashMoneyCollection : ICashMoneyCollection
+    public class CashMoneyCollection : ICashMoneyCollection
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -56,7 +56,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        private static List<CashMoney> CalculateMinimum(IList<CashMoney> coins, double change)
+        public static List<CashMoney> CalculateMinimum(IList<CashMoney> coins, double change)
         {
             // used to store the minimum matches
             List<CashMoney> minimalMatch = null;
