@@ -8,21 +8,22 @@ namespace VendingMachineCodeFirst
     {
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        IPayment payment;
+        ClientService service;
         Controller ctrl;
         Validator validator = new Validator();
-        IPayment payment;
+
 
         public void Run()
         {
             while (true)
             {
-                ctrl = new Controller();
+                ctrl = new Controller(new ClientService());
                 MainMenu();
             }
         }
 
-        public void MainMenu()
+        private void MainMenu()
         {
             string str = "------------Menu----------------\n\n";
             str += "1.List of products\n";
@@ -45,7 +46,7 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        public void ShowProductList()
+        private void ShowProductList()
         {
             IList<Product> products = ctrl.GetProducts();
 
@@ -57,7 +58,7 @@ namespace VendingMachineCodeFirst
             Console.ReadKey();
         }
 
-        public void WayOfPayment()
+        private void WayOfPayment()
         {
             string str = "-----------Payment----------------\n\n";
             str += "1.Cash\n";
@@ -68,12 +69,12 @@ namespace VendingMachineCodeFirst
             {
                 case "1":
                     log.Info("Cash Payment");
-                    payment = new CashService();
+                    payment = new CashPayment();
                     ShopMenu();
                     break;
                 case "2":
                     log.Info("Card Payment");
-                    payment = new CardService();
+                    AskCardDetails();
                     ShopMenu();
                     break;
                 default:
@@ -82,23 +83,30 @@ namespace VendingMachineCodeFirst
                     break;
             }
         }
+        private void AskCardDetails()
+        {
+            Console.WriteLine("CardNo:");
+            string cardNo = Console.ReadLine();
+            Console.WriteLine("PIN:");
+            string pin = Console.ReadLine();
+            payment = new CardPayment(cardNo, pin);
+        }
 
-        public void ShopMenu()
+        private void ShopMenu()
         {
             ShowProductList();
             try
             {
                 Console.WriteLine("Product id:");
                 string id = Console.ReadLine();
-                ctrl = new Controller(payment);
+                service = new ClientService(payment);
+                ctrl = new Controller(service);
                 if (ctrl.BuyProduct(id))
                 {
                     Console.WriteLine("Product bought successfully :D");
                     ShowProductList();
                     log.Info("Product bought successfully");
-                    return;
                 }
-
                 Console.WriteLine("The product wasn't bought :( \n");
                 Console.ReadKey();
                 log.Info("The Product wasn't bought :( \n");

@@ -4,5 +4,6 @@
     {
         void Pay(double cost);
         bool IsEnough(double cost);
+        bool IsValid();
     }
 }
