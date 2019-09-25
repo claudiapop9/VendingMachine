@@ -13,31 +13,43 @@ namespace VendingMachineCodeFirst
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ProductCollection productCollection = new ProductCollection();
+        private readonly IProductCollection productCollection;
         private DataService dataStorage = new DataService(filePath, filePathAllStates);
         private TransactionManager transactionManager = new TransactionManager();
         private ReportService report = new ReportService();
         private IPayment payment;
+        private Validator validator;
 
-        public Controller() { }
+        public Controller() => productCollection = new ProductCollection();
 
         public Controller(IPayment paymentMethod)
         {
             this.payment = paymentMethod;
+            productCollection = new ProductCollection();
+        }
+        public Controller(IPayment paymentMethod, IProductCollection productCollection)
+        {
+            this.payment = paymentMethod;
+            this.productCollection = productCollection;
         }
 
-        public bool BuyProduct(int productId)
+        public bool BuyProduct(string id)
         {
             try
             {
-                double productPrice = productCollection.GetProductPriceByKey(productId);
-                if (payment.IsEnough(productPrice))
+                if (validator.isIdValid(id))
                 {
-                    productCollection.DecreaseProductQuantity(productId);
-                    payment.Pay(productPrice);
-                    dataStorage.PersistData(GetProducts());
-                    AddTransition("BUY", productId);
-                    return true;
+                    int productId = Int32.Parse(id);
+                    double productPrice = productCollection.GetProductPriceByKey(productId);
+                    if (payment.IsEnough(productPrice))
+                    {
+                        productCollection.DecreaseProductQuantity(productId);
+                        payment.Pay(productPrice);
+                        dataStorage.PersistData(GetProducts());
+                        AddTransition("BUY", productId);
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
@@ -79,7 +91,6 @@ namespace VendingMachineCodeFirst
                 AddTransactionRefill(productsToRefList);
                 return true;
             }
-
             return false;
         }
 

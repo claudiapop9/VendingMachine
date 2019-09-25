@@ -89,20 +89,8 @@ namespace VendingMachineCodeFirst
             try
             {
                 Console.WriteLine("Product id:");
-                int id = Int32.Parse(Console.ReadLine());
+                string id = Console.ReadLine();
                 ctrl = new Controller(payment);
-                BuyValidatedProduct(id);
-            }
-            catch (Exception e)
-            {
-                log.Error(e);
-            }
-        }
-
-        private void BuyValidatedProduct(int id)
-        {
-            if (validator.isIdValid(id))
-            {
                 if (ctrl.BuyProduct(id))
                 {
                     Console.WriteLine("Product bought successfully :D");
@@ -115,10 +103,10 @@ namespace VendingMachineCodeFirst
                 Console.ReadKey();
                 log.Info("The Product wasn't bought :( \n");
             }
-
-            Console.WriteLine("Invalid id :( \n");
-            Console.ReadKey();
-            log.Info("Invalid id :( \n");
+            catch (Exception e)
+            {
+                log.Error(e);
+            }
         }
     }
 }
