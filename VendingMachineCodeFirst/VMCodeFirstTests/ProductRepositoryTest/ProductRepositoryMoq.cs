@@ -1,7 +1,7 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using VendingMachineCodeFirst;
 
 namespace VMCodeFirstTests.ProductRepositoryTest

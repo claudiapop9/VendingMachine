@@ -10,7 +10,7 @@ namespace VendingMachineCodeFirst
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         IPayment payment;
         ClientService service;
-        Controller ctrl;
+        ClientController ctrl;
         Validator validator = new Validator();
 
 
@@ -18,7 +18,7 @@ namespace VendingMachineCodeFirst
         {
             while (true)
             {
-                ctrl = new Controller(new ClientService());
+                ctrl = new ClientController(new ClientService());
                 MainMenu();
             }
         }
@@ -100,7 +100,7 @@ namespace VendingMachineCodeFirst
                 Console.WriteLine("Product id:");
                 string id = Console.ReadLine();
                 service = new ClientService(payment);
-                ctrl = new Controller(service);
+                ctrl = new ClientController(service);
                 if (ctrl.BuyProduct(id))
                 {
                     Console.WriteLine("Product bought successfully :D");

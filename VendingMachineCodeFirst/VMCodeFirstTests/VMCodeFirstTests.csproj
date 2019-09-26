@@ -76,7 +76,6 @@
     <Compile Include="CashMoneyRepositoryTest\CashMoneyRepositoryMoq.cs" />
     <Compile Include="CashMoneyRepositoryTest\CashMoneyRepositoryTests.cs" />
     <Compile Include="CashMoneyPaymentTest\CashMoneyPaymentTests.cs" />
-    <Compile Include="ControllerTest\ControllerTests.cs" />
     <Compile Include="ProductRepositoryTest\ProductRepositoryMoq.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProductRepositoryTest\ProductionRepositoryTests.cs" />
