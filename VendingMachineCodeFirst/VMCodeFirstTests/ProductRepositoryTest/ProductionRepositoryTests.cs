@@ -3,9 +3,8 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using VendingMachineCodeFirst;
-using VMCodeFirstTests.ProductCollectionTest;
 
-namespace VMCodeFirstTests
+namespace VMCodeFirstTests.ProductRepositoryTest
 {
     [TestClass]
     public class ProductionCollectionTests

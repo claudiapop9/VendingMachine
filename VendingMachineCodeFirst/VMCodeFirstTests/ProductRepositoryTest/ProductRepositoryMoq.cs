@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VendingMachineCodeFirst;
 
-namespace VMCodeFirstTests.ProductCollectionTest
+namespace VMCodeFirstTests.ProductRepositoryTest
 {
     public static class ProductCollectionMoq
     {
