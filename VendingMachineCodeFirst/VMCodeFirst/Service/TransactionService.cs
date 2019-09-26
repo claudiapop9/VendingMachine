@@ -1,48 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
-namespace VendingMachineCodeFirst
+namespace VendingMachineCodeFirst.Service
 {
-    public class TransactionManager
+    class TransactionService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private TransactionRepository transactionRepository = new TransactionRepository();
 
-
-        public void AddTransaction(Transaction t)
+        internal void AddTransactionRefill(IList<Product> products)
         {
-            try
+            foreach (var prod in products)
             {
-                using (var db = new VendMachineDbContext())
-                {
-                    db.Transactions.Add(t);
-                    db.SaveChanges();
-                    log.Info("Transaction Added");
-                }
-            }
-            catch (Exception)
-            {
-                log.Error("Db connection failed-transactions");
+                AddTransition("REFILL", prod.ProductId);
             }
         }
 
-        public List<Transaction> GetTransactions()
+        internal void AddTransition(string info, int productId)
         {
-            try
-            {
-                List<Transaction> transactions = new List<Transaction>();
-                using (var db = new VendMachineDbContext())
-                {
-                    transactions = db.Transactions.ToList<Transaction>();
-                }
-                return transactions;
+            Transaction transaction = new Transaction(info, productId);
+            transactionRepository.AddTransaction(transaction);
+        }
 
-            }
-            catch (Exception)
-            {
-                log.Error("Db connection");
-                return new List<Transaction>();
-            }
+        internal List<Transaction> GetTransactions()
+        {
+            return transactionRepository.GetTransactions();
         }
     }
 }
