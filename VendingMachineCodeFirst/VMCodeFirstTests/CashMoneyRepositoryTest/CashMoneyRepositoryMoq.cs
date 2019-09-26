@@ -1,15 +1,15 @@
 ﻿using Moq;
-using System.Collections.Generic;
 using System.Linq;
 using VendingMachineCodeFirst;
+using System.Collections.Generic;
 
-namespace VMCodeFirstTests.CashMoneyCollectionTest
+namespace VMCodeFirstTests.CashMoneyRepositoryTest
 {
     public static class CashMoneyRepositoryMoq
     {
-        public static void UpdateMoney(Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection, IList<CashMoney> money)
+        public static void UpdateMoney(Mock<ICashMoneyRepositoryExtended> MockCashMoneyRepository, IList<CashMoney> money)
         {
-            MockCashMoneyCollection.Setup(mock => mock.UpdateMoney(It.IsAny<double>(), It.IsAny<int>())).Callback(
+            MockCashMoneyRepository.Setup(mock => mock.UpdateMoney(It.IsAny<double>(), It.IsAny<int>())).Callback(
                (double value, int quantity) =>
                {
                    CashMoney cashMoney = money.Where(x => x.MoneyValue == value).FirstOrDefault();
@@ -19,9 +19,9 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
                });
         }
 
-        public static void GiveChange(Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection, IList<CashMoney> money)
+        public static void GiveChange(Mock<ICashMoneyRepositoryExtended> MockCashMoneyRepository, IList<CashMoney> money)
         {
-            MockCashMoneyCollection.Setup(mock => mock.GiveChange(It.IsAny<double>())).Callback(
+            MockCashMoneyRepository.Setup(mock => mock.GiveChange(It.IsAny<double>())).Callback(
                 (double change) =>
                 {
                     IList<CashMoney> changedMoney = CashMoneyRepository.CalculateMinimum(money, change);
@@ -35,9 +35,9 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
                 });
         }
 
-        public static void GetMoney(Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection, IList<CashMoney> money)
+        public static void GetMoney(Mock<ICashMoneyRepositoryExtended> MockCashMoneyRepository, IList<CashMoney> money)
         {
-            MockCashMoneyCollection.Setup(mock => mock.GetCashMoney()).Returns(money);
+            MockCashMoneyRepository.Setup(mock => mock.GetCashMoney()).Returns(money);
         }
     }
 }

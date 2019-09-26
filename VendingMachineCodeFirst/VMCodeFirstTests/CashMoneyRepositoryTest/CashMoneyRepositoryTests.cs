@@ -4,13 +4,13 @@ using VendingMachineCodeFirst;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace VMCodeFirstTests.CashMoneyCollectionTest
+namespace VMCodeFirstTests.CashMoneyRepositoryTest
 {
     [TestClass]
     public class CashMoneyRepositoryTests
     {
         IList<CashMoney> money;
-        Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection;
+        Mock<ICashMoneyRepositoryExtended> MockCashMoneyRepository;
 
         [TestInitialize]
         public void TestInit()
@@ -23,18 +23,18 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 10 }
             };
 
-            MockCashMoneyCollection = new Mock<ICashMoneyRepositoryExtended >();
+            MockCashMoneyRepository = new Mock<ICashMoneyRepositoryExtended>();
         }
 
         [TestMethod]
         public void GiveChange()
         {
-            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyCollection, money);
-            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyRepository, money);
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyRepository, money);
 
-            MockCashMoneyCollection.Object.GiveChange(2.5);
+            MockCashMoneyRepository.Object.GiveChange(2.5);
 
-            IList<CashMoney> foundMoney = MockCashMoneyCollection.Object.GetCashMoney();
+            IList<CashMoney> foundMoney = MockCashMoneyRepository.Object.GetCashMoney();
 
             int quantityValue1 = foundMoney.Where(cash => cash.MoneyValue == 1).FirstOrDefault().Quantity;
             int quantityValue05 = foundMoney.Where(cash => cash.MoneyValue == 0.5).FirstOrDefault().Quantity;
@@ -46,12 +46,12 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
         [TestMethod]
         public void UpdateMoney()
         {
-            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyCollection, money);
-            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
+            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyRepository, money);
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyRepository, money);
 
-            MockCashMoneyCollection.Object.UpdateMoney(10, 2);
+            MockCashMoneyRepository.Object.UpdateMoney(10, 2);
 
-            IList<CashMoney> foundMoney = MockCashMoneyCollection.Object.GetCashMoney();
+            IList<CashMoney> foundMoney = MockCashMoneyRepository.Object.GetCashMoney();
 
             int quantityValue = foundMoney.Where(cash => cash.MoneyValue == 10).FirstOrDefault().Quantity;
 
@@ -62,7 +62,7 @@ namespace VMCodeFirstTests.CashMoneyCollectionTest
         public void TestCleanUp()
         {
             money = null;
-            MockCashMoneyCollection = null;
+            MockCashMoneyRepository = null;
         }
     }
 }

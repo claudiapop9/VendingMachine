@@ -3,16 +3,16 @@ using System.Linq;
 using VendingMachineCodeFirst;
 using System.Collections.Generic;
 using VendingMachineCodeFirst.Service;
-using VMCodeFirstTests.CashMoneyCollectionTest;
+using VMCodeFirstTests.CashMoneyRepositoryTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace VMCodeFirstTests.CashMoneyServiceTest
+namespace VMCodeFirstTests.CashMoneyPaymentTest
 {
     [TestClass]
     public class CashMoneyServiceTests
     {
-        Mock<ICashMoneyRepositoryExtended > MockCashMoneyCollection;
-        private CashPayment cashService;
+        Mock<ICashMoneyRepositoryExtended> MockCashMoneyRepository;
+        private CashPayment cashPayment;
 
         [TestInitialize]
         public void TestInit()
@@ -24,10 +24,10 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
                 new CashMoney() { Id = 3, MoneyValue = 1, Quantity = 10 },
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 10 }
             };
-            MockCashMoneyCollection = new Mock<ICashMoneyRepositoryExtended >();
-            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyCollection, money);
-            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyCollection, money);
-            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyCollection, money);
+            MockCashMoneyRepository = new Mock<ICashMoneyRepositoryExtended>();
+            CashMoneyRepositoryMoq.GetMoney(MockCashMoneyRepository, money);
+            CashMoneyRepositoryMoq.UpdateMoney(MockCashMoneyRepository, money);
+            CashMoneyRepositoryMoq.GiveChange(MockCashMoneyRepository, money);
 
             IList<CashMoney> introducedMoney = new List<CashMoney>()
             {
@@ -36,14 +36,14 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
                 new CashMoney() { Id = 4, MoneyValue = 0.5, Quantity = 1 }
             };
             double total = 9.5;
-            cashService = new CashPayment(MockCashMoneyCollection.Object, introducedMoney, total);
+            cashPayment = new CashPayment(MockCashMoneyRepository.Object, introducedMoney, total);
         }
 
         [TestMethod]
         public void PayWhenCostEqualsTotalAmount()
         {
-            cashService.Pay(9.5);
-            IList<CashMoney> foundMoney = MockCashMoneyCollection.Object.GetCashMoney();
+            cashPayment.Pay(9.5);
+            IList<CashMoney> foundMoney = MockCashMoneyRepository.Object.GetCashMoney();
 
             int quantityValue5 = foundMoney.Where(cash => cash.MoneyValue == 5).FirstOrDefault().Quantity;
             int quantityValue1 = foundMoney.Where(cash => cash.MoneyValue == 1).FirstOrDefault().Quantity;
@@ -57,8 +57,8 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
         [TestMethod]
         public void PayWhenCostSmallerThanTotalAmount()
         {
-            cashService.Pay(8);
-            IList<CashMoney> foundMoney = MockCashMoneyCollection.Object.GetCashMoney();
+            cashPayment.Pay(8);
+            IList<CashMoney> foundMoney = MockCashMoneyRepository.Object.GetCashMoney();
 
             int quantityValue5 = foundMoney.Where(cash => cash.MoneyValue == 5).FirstOrDefault().Quantity;
             int quantityValue1 = foundMoney.Where(cash => cash.MoneyValue == 1).FirstOrDefault().Quantity;
@@ -72,8 +72,8 @@ namespace VMCodeFirstTests.CashMoneyServiceTest
         [TestCleanup]
         public void TestCleanUp()
         {
-            MockCashMoneyCollection = null;
-            cashService = null;
+            MockCashMoneyRepository = null;
+            cashPayment = null;
         }
     }
 }
