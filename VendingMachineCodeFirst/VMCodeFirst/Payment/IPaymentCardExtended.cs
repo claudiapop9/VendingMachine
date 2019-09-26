@@ -2,7 +2,7 @@
 
 namespace VendingMachineCodeFirst
 {
-    public interface IPaymentCardExtended : IPayment
+    public interface ICardServiceExtended : IPayment
     {
         IList<Account> GetAccounts();
         bool IsValidCard(string cardNumber, string cardPin);

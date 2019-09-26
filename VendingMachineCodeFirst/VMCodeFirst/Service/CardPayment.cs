@@ -2,7 +2,7 @@
 
 namespace VendingMachineCodeFirst.Service
 {
-    class CardPayment : IPayment
+    public class CardPayment : IPayment
     {
         private ICardRepository cardRepo;
         public CardPayment(string cardNo, string pin) => this.cardRepo=new CardRepository(cardNo, pin); 

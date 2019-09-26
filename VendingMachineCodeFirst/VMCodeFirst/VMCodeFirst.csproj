@@ -60,6 +60,7 @@
     <Compile Include="Repository\CardRepository.cs" />
     <Compile Include="Repository\CashMoneyRepository.cs" />
     <Compile Include="Repository\ICardRepository.cs" />
+    <Compile Include="Repository\ICardRepositoryExtended.cs" />
     <Compile Include="Repository\ICashMoneyRepository.cs" />
     <Compile Include="Repository\ICashMoneyRepositoryExtended.cs" />
     <Compile Include="Models\Account.cs" />
