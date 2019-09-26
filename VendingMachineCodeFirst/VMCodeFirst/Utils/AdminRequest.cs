@@ -1,6 +1,6 @@
 ﻿namespace VendingMachineCodeFirst
 {
-    class AdminRequest
+    public static class AdminRequest
     {
         public const string GET = "GET";
         public const string ADD = "ADD";

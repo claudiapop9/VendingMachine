@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using VendingMachineCodeFirst.Service;
 
 namespace VendingMachineCodeFirst
 {
@@ -11,7 +12,7 @@ namespace VendingMachineCodeFirst
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SocketCommunication socketCommunication;
-        private ClientService service = new ClientService();
+        private AdminService service = new AdminService();
 
         public AdminController(SocketCommunication socketCommunication)
         {

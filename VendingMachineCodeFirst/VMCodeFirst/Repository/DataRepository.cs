@@ -1,23 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using VendingMachineCodeFirst.Utils;
 
 namespace VendingMachineCodeFirst
 {
-    public class DataService
+    public class DataRepository
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private readonly string filePath;
-        private readonly string filePathAll;
-
-        public DataService(string filePath, string filePathAll)
-        {
-            this.filePath = filePath;
-            this.filePathAll = filePathAll;
-        }
-
+        private const string filePath = FilePath.CurentStatePATH;
+        private const string filePathAll = FilePath.AllStatePATH;
+  
         public void PersistData(IList<Product> products)
         {
             WriteCurrentState(products);

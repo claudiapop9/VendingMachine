@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VendingMachineCodeFirst.Utils;
 
 namespace VendingMachineCodeFirst
 {
-    public class ReportService
+    public class ReportRepository
     {
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const string filePath = FilePath.ReportPATH;
 
-        public string GenerateReport(string filePath, List<Transaction> list)
+        public string GenerateReport(List<Transaction> list)
         {
             try
             {
