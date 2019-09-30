@@ -27,6 +27,29 @@ namespace VendingMachineCodeFirst
             }
         }
 
+        public bool IsValid(IList<CashMoney> money)
+        {
+            try
+            {
+                using (var db = new VendMachineDbContext())
+                {
+                    IList<CashMoney> cashMoney = db.Money.ToList<CashMoney>();
+                    foreach (CashMoney m in money) {
+                        if (cashMoney.Where(mon=> mon.Id == m.Id).FirstOrDefault() == null)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                log.Error("Fail database connection-IsValid");
+                return false;
+            }
+        }
+
         public void GiveChange(double change)
         {
             List<CashMoney> money = new List<CashMoney>();
@@ -120,6 +143,7 @@ namespace VendingMachineCodeFirst
             return null;
         }
 
+        
     }
 }
 

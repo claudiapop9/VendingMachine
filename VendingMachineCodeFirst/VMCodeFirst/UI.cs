@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using VendingMachineCodeFirst.Service;
 
@@ -8,11 +9,12 @@ namespace VendingMachineCodeFirst
     {
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private IList<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
+        private IList<CashMoney> introducedMoney = new List<CashMoney>();
+        double totalMoney = 0;
         IPayment payment;
         ClientService service;
         ClientController ctrl;
-        Validator validator = new Validator();
-
 
         public void Run()
         {
@@ -69,13 +71,18 @@ namespace VendingMachineCodeFirst
             {
                 case "1":
                     log.Info("Cash Payment");
-                    payment = new CashPayment();
-                    ShopMenu();
+                    ShowProductList();
+                    string id = ChooseProduct();
+                    AskCashMoney(id);
+                    payment = new CashPayment(introducedMoney,totalMoney);
+                    ShopMenu(id);
                     break;
                 case "2":
                     log.Info("Card Payment");
-                    AskCardDetails();
-                    ShopMenu();
+                    ShowProductList();
+                    Tuple<string, string> cardDetails = AskCardDetails();
+                    payment = new CardPayment(cardDetails.Item1, cardDetails.Item2);
+                    ShopMenu(ChooseProduct());
                     break;
                 default:
                     Console.WriteLine("Invalid command, try again");
@@ -83,22 +90,56 @@ namespace VendingMachineCodeFirst
                     break;
             }
         }
-        private void AskCardDetails()
+
+        private Tuple<string, string> AskCardDetails()
         {
             Console.WriteLine("CardNo:");
             string cardNo = Console.ReadLine();
             Console.WriteLine("PIN:");
             string pin = Console.ReadLine();
-            payment = new CardPayment(cardNo, pin);
+            return new Tuple<string, string>(cardNo, pin);
         }
 
-        private void ShopMenu()
+        private void AskCashMoney(string id)
         {
-            ShowProductList();
             try
             {
-                Console.WriteLine("Product id:");
-                string id = Console.ReadLine();
+                double cost = ctrl.GetProducts().Where(product => product.ProductId.ToString() == id).FirstOrDefault().Price;
+                Console.WriteLine("Introduce money:");
+                double money = Double.Parse(Console.ReadLine());
+                AddMoney(money);
+                while (totalMoney < cost)
+                {
+                    Console.WriteLine($"Not enough.Introduce more: {cost - totalMoney}:");
+                    money = Double.Parse(Console.ReadLine());
+                    AddMoney(money);
+                };
+            }
+            catch (Exception e)
+            {
+                log.Error("Something is wrong at cash payment.");
+                Console.WriteLine(e);
+            }
+        }
+
+        public void AddMoney(double money)
+        {
+            if (acceptedDenominations.Contains(money))
+            {
+                CashMoney cashMoney = new CashMoney(money, 1);
+                introducedMoney.Add(cashMoney);
+                totalMoney += money;
+            }
+            else
+            {
+                throw new Exception("Money not accepted");
+            }
+        }
+
+        private void ShopMenu(string id)
+        {
+            try
+            {
                 service = new ClientService(payment);
                 ctrl = new ClientController(service);
                 if (ctrl.BuyProduct(id))
@@ -116,5 +157,12 @@ namespace VendingMachineCodeFirst
                 log.Error(e);
             }
         }
+        private string ChooseProduct()
+        {
+            Console.WriteLine("Product id:");
+            string id = Console.ReadLine();
+            return id;
+        }
+
     }
 }
