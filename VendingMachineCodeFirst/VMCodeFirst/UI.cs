@@ -3,6 +3,7 @@ using System.Linq;
 using VendingMachineCommon;
 using System.Collections.Generic;
 using VendingMachineCodeFirst.Service;
+using VMCodeFirst.Controller;
 
 namespace VendingMachineCodeFirst
 {
@@ -10,18 +11,17 @@ namespace VendingMachineCodeFirst
     {
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private IList<double> acceptedDenominations = new List<double>() { 10, 5, 1, 0.5 };
-        private IList<CashMoney> introducedMoney = new List<CashMoney>();
-        double totalMoney = 0;
+
         IPayment payment;
         ClientService service;
-        ClientController ctrl;
+        ClientController clientCtrl;
+        CashController cashCtrl;
 
         public void Run()
         {
             while (true)
             {
-                ctrl = new ClientController(new ClientService());
+                clientCtrl = new ClientController(new ClientService());
                 MainMenu();
             }
         }
@@ -51,7 +51,7 @@ namespace VendingMachineCodeFirst
 
         private void ShowProductList()
         {
-            IList<Product> products = ctrl.GetProducts();
+            IList<Product> products = clientCtrl.GetProducts();
 
             for (int i = 0; i < products.Count; i++)
             {
@@ -74,8 +74,9 @@ namespace VendingMachineCodeFirst
                     log.Info("Cash Payment");
                     ShowProductList();
                     string id = ChooseProduct();
-                    AskCashMoney(id);
-                    payment = new CashPayment(introducedMoney,totalMoney);
+                    cashCtrl = new CashController();
+                    Tuple<IList<CashMoney>, double> cashDetails = AskCashMoney(id);
+                    payment = new CashPayment(cashDetails.Item1, cashDetails.Item2);
                     ShopMenu(id);
                     break;
                 case "2":
@@ -101,39 +102,27 @@ namespace VendingMachineCodeFirst
             return new Tuple<string, string>(cardNo, pin);
         }
 
-        private void AskCashMoney(string id)
+        private Tuple<IList<CashMoney>, double> AskCashMoney(string id)
         {
             try
             {
-                double cost = ctrl.GetProducts().Where(product => product.ProductId.ToString() == id).FirstOrDefault().Price;
+                double cost = clientCtrl.GetProducts().Where(product => product.ProductId.ToString() == id).FirstOrDefault().Price;
                 Console.WriteLine("Introduce money:");
                 double money = Double.Parse(Console.ReadLine());
-                AddMoney(money);
-                while (totalMoney < cost)
+                cashCtrl.AddMoney(money);
+                while (cashCtrl.TotalMoney < cost)
                 {
-                    Console.WriteLine($"Not enough.Introduce more: {cost - totalMoney}:");
+                    Console.WriteLine($"Not enough.Introduce more: {cost - cashCtrl.TotalMoney}:");
                     money = Double.Parse(Console.ReadLine());
-                    AddMoney(money);
+                    cashCtrl.AddMoney(money);
                 };
+                return new Tuple<IList<CashMoney>, double>(cashCtrl.IntroducedMoney, cashCtrl.TotalMoney);
             }
             catch (Exception e)
             {
                 log.Error("Something is wrong at cash payment.");
                 Console.WriteLine(e);
-            }
-        }
-
-        public void AddMoney(double money)
-        {
-            if (acceptedDenominations.Contains(money))
-            {
-                CashMoney cashMoney = new CashMoney(money, 1);
-                introducedMoney.Add(cashMoney);
-                totalMoney += money;
-            }
-            else
-            {
-                throw new Exception("Money not accepted");
+                return new Tuple<IList<CashMoney>, double>(new List<CashMoney>(), 0);
             }
         }
 
@@ -142,8 +131,8 @@ namespace VendingMachineCodeFirst
             try
             {
                 service = new ClientService(payment);
-                ctrl = new ClientController(service);
-                if (ctrl.BuyProduct(id))
+                clientCtrl = new ClientController(service);
+                if (clientCtrl.BuyProduct(id))
                 {
                     Console.WriteLine("Product bought successfully :D");
                     ShowProductList();

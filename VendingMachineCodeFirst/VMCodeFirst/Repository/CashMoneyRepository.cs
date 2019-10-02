@@ -35,7 +35,7 @@ namespace VendingMachineCodeFirst
                 {
                     IList<CashMoney> cashMoney = db.Money.ToList<CashMoney>();
                     foreach (CashMoney m in money) {
-                        if (cashMoney.Where(mon=> mon.Id == m.Id).FirstOrDefault() == null)
+                        if (cashMoney.Where(mon=> mon.MoneyValue == m.MoneyValue).FirstOrDefault() == null)
                         {
                             return false;
                         }
