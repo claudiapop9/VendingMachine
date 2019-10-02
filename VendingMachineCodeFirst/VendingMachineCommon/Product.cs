@@ -1,15 +1,16 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace VendingMachineAdmin
+namespace VendingMachineCommon
 {
-    class Product
+    public class Product
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
 
+        public Product() { }
 
         public Product(string name, int quantity, double price)
         {
@@ -19,14 +20,13 @@ namespace VendingMachineAdmin
         }
 
         [JsonConstructor]
-        public Product(int id, string name, int quantity, double price)
+        public Product(int productId, string name, int quantity, double price)
         {
-            ProductId = id;
+            ProductId = productId;
             Name = name;
             Quantity = quantity;
             Price = price;
         }
-
 
         public override String ToString()
         {

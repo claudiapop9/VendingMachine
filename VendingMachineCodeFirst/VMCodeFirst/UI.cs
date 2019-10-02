@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VendingMachineCommon;
 using System.Collections.Generic;
 using VendingMachineCodeFirst.Service;
 

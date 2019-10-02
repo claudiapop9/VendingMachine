@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using VendingMachineCommon;
+
 
 namespace VendingMachineCodeFirst.Service
 {

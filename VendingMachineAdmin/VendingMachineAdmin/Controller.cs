@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using VendingMachineCommon;
 
 namespace VendingMachineAdmin
 {
@@ -43,10 +44,10 @@ namespace VendingMachineAdmin
             try
             {
                 Product product = new Product(tupleItem1, tupleItem2, tupleItem3);
-                admin.SendMessage("ADD " + JsonConvert.SerializeObject(product));
+                admin.SendMessage(AdminRequest.ADD + " " + JsonConvert.SerializeObject(product));
                 string message = admin.ReceiveMessage();
                 admin.ReleaseSocket();
-                log.Info("ADD "+ product);
+                log.Info("ADD " + product);
                 return message;
             }
             catch (Exception)
@@ -62,7 +63,7 @@ namespace VendingMachineAdmin
             try
             {
                 Product product = new Product(id, tupleItem1, tupleItem2, tupleItem3);
-                admin.SendMessage("UPDATE " + JsonConvert.SerializeObject(product));
+                admin.SendMessage(AdminRequest.UPDATE + " " + JsonConvert.SerializeObject(product));
                 string message = admin.ReceiveMessage();
                 admin.ReleaseSocket();
                 log.Info("UPDATE " + product);
@@ -78,16 +79,16 @@ namespace VendingMachineAdmin
 
         public string DeleteProductFromList(int id)
         {
-            admin.SendMessage("DELETE " + JsonConvert.SerializeObject(id));
+            admin.SendMessage(AdminRequest.DELETE + " " + JsonConvert.SerializeObject(id));
             string message = admin.ReceiveMessage();
             admin.ReleaseSocket();
-            log.Info("DELETE"+ id);
+            log.Info("DELETE" + id);
             return message;
         }
 
         public string Refill()
         {
-            admin.SendMessage("REFILL ");
+            admin.SendMessage(AdminRequest.REFILL + " ");
             string message = admin.ReceiveMessage();
             admin.ReleaseSocket();
             log.Info("REFILL");
@@ -96,9 +97,9 @@ namespace VendingMachineAdmin
 
         public string GenerateReport()
         {
-            admin.SendMessage("REPORT ");
+            admin.SendMessage(AdminRequest.REPORT + " ");
             string message = admin.ReceiveMessage();
-            log.Info("REPORT "+ message);
+            log.Info("REPORT " + message);
             admin.ReleaseSocket();
             return message;
         }

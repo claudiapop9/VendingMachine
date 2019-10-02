@@ -1,4 +1,4 @@
-﻿namespace VendingMachineCodeFirst
+﻿namespace VendingMachineCommon
 {
     public static class AdminRequest
     {

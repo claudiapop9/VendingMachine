@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using System.Net.Sockets;
+using VendingMachineCommon;
 using System.Collections.Generic;
 using VendingMachineCodeFirst.Service;
 

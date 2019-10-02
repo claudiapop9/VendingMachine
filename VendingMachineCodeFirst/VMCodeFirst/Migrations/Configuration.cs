@@ -1,6 +1,7 @@
 namespace VendingMachineCodeFirst.Migrations
 {
     using System.Data.Entity.Migrations;
+    using VendingMachineCommon;
 
 
     internal sealed class Configuration : DbMigrationsConfiguration<VendMachineDbContext>

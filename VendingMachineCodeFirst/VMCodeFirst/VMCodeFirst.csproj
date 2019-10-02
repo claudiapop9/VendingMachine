@@ -64,7 +64,6 @@
     <Compile Include="Repository\ICashMoneyRepository.cs" />
     <Compile Include="Repository\ICashMoneyRepositoryExtended.cs" />
     <Compile Include="Models\Account.cs" />
-    <Compile Include="Utils\AdminRequest.cs" />
     <Compile Include="Payment\IPaymentCashExtended.cs" />
     <Compile Include="Service\ClientService.cs" />
     <Compile Include="Payment\CardPayment.cs" />
@@ -87,7 +86,6 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Repository\DataRepository.cs" />
-    <Compile Include="Models\Product.cs" />
     <Compile Include="Repository\ProductRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +113,11 @@
       <DependentUpon>201904090816136_pending.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VendingMachineCommon\VendingMachineCommon.csproj">
+      <Project>{4de2ecc2-288d-467f-8405-790dff07987b}</Project>
+      <Name>VendingMachineCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
