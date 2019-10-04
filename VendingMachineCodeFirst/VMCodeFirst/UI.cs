@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
-using VendingMachineCommon;
 using System.Collections.Generic;
+using System.Linq;
 using VendingMachineCodeFirst.Service;
-using VMCodeFirst.Controller;
+using VendingMachineCommon;
 
 namespace VendingMachineCodeFirst
 {
@@ -15,7 +14,10 @@ namespace VendingMachineCodeFirst
         IPayment payment;
         ClientService service;
         ClientController clientCtrl;
-        CashController cashCtrl;
+        IList<CashMoney> introducedMoney;
+        double totalMoney;
+        string cardNo;
+        string pin;
 
         public void Run()
         {
@@ -43,7 +45,7 @@ namespace VendingMachineCodeFirst
                     WayOfPayment();
                     break;
                 default:
-                    Console.WriteLine("Invalid option :( Try again");
+                    //Console.WriteLine("Invalid option :( Try again");
                     MainMenu();
                     break;
             }
@@ -74,16 +76,15 @@ namespace VendingMachineCodeFirst
                     log.Info("Cash Payment");
                     ShowProductList();
                     string id = ChooseProduct();
-                    cashCtrl = new CashController();
-                    Tuple<IList<CashMoney>, double> cashDetails = AskCashMoney(id);
-                    payment = new CashPayment(cashDetails.Item1, cashDetails.Item2);
+                    AskCashMoney(id);
+                    payment = new CashPayment(introducedMoney, totalMoney);
                     ShopMenu(id);
                     break;
                 case "2":
                     log.Info("Card Payment");
                     ShowProductList();
-                    Tuple<string, string> cardDetails = AskCardDetails();
-                    payment = new CardPayment(cardDetails.Item1, cardDetails.Item2);
+                    AskCardDetails();
+                    payment = new CardPayment(cardNo, pin);
                     ShopMenu(ChooseProduct());
                     break;
                 default:
@@ -93,36 +94,35 @@ namespace VendingMachineCodeFirst
             }
         }
 
-        private Tuple<string, string> AskCardDetails()
+        private void AskCardDetails()
         {
             Console.WriteLine("CardNo:");
-            string cardNo = Console.ReadLine();
+            this.cardNo = Console.ReadLine();
             Console.WriteLine("PIN:");
-            string pin = Console.ReadLine();
-            return new Tuple<string, string>(cardNo, pin);
+            this.pin = Console.ReadLine();
         }
 
-        private Tuple<IList<CashMoney>, double> AskCashMoney(string id)
+        private void AskCashMoney(string id)
         {
             try
             {
                 double cost = clientCtrl.GetProducts().Where(product => product.ProductId.ToString() == id).FirstOrDefault().Price;
                 Console.WriteLine("Introduce money:");
                 double money = Double.Parse(Console.ReadLine());
-                cashCtrl.AddMoney(money);
-                while (cashCtrl.TotalMoney < cost)
+                clientCtrl.AddMoney(money);
+                while (clientCtrl.TotalMoney < cost)
                 {
-                    Console.WriteLine($"Not enough.Introduce more: {cost - cashCtrl.TotalMoney}:");
+                    Console.WriteLine($"Not enough.Introduce more: {cost - clientCtrl.TotalMoney}:");
                     money = Double.Parse(Console.ReadLine());
-                    cashCtrl.AddMoney(money);
+                    clientCtrl.AddMoney(money);
                 };
-                return new Tuple<IList<CashMoney>, double>(cashCtrl.IntroducedMoney, cashCtrl.TotalMoney);
+                this.introducedMoney = clientCtrl.IntroducedMoney;
+                this.totalMoney = clientCtrl.TotalMoney;
             }
             catch (Exception e)
             {
                 log.Error("Something is wrong at cash payment.");
                 Console.WriteLine(e);
-                return new Tuple<IList<CashMoney>, double>(new List<CashMoney>(), 0);
             }
         }
 
@@ -138,21 +138,24 @@ namespace VendingMachineCodeFirst
                     ShowProductList();
                     log.Info("Product bought successfully");
                 }
-                Console.WriteLine("The product wasn't bought :( \n");
-                Console.ReadKey();
-                log.Info("The Product wasn't bought :( \n");
+                else
+                {
+                    Console.WriteLine("The product wasn't bought :( \n");
+                    Console.ReadKey();
+                    log.Info("The Product wasn't bought :( \n");
+                }
             }
             catch (Exception e)
             {
                 log.Error(e);
             }
         }
+
         private string ChooseProduct()
         {
             Console.WriteLine("Product id:");
             string id = Console.ReadLine();
             return id;
         }
-
     }
 }

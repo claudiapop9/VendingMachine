@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\CashController.cs" />
     <Compile Include="Repository\CardRepository.cs" />
     <Compile Include="Repository\CashMoneyRepository.cs" />
     <Compile Include="Repository\ICardRepository.cs" />

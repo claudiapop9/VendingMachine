@@ -18,6 +18,7 @@ namespace VendingMachineCodeFirst.Service
             this.payment = paymentMethod;
             this.productRepository = productRepository;
         }
+
         public ClientService(IPayment paymentMethod)
         {
             this.payment = paymentMethod;
